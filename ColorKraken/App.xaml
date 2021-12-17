@@ -1,9 +1,20 @@
 ﻿<Application x:Class="ColorKraken.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ColorKraken"
+             xmlns:local="clr-namespace:ColorKraken" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              StartupUri="MainWindow.xaml">
-    <Application.Resources>
-         
-    </Application.Resources>
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <materialDesign:CustomColorTheme BaseTheme="Inherit" PrimaryColor="#179287" SecondaryColor="#E65425" />
+
+        <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+
+      </ResourceDictionary.MergedDictionaries>
+
+      <local:PickerViewModelConverter x:Key="PickerViewModelConverter" />
+      <local:ColorStringConverter x:Key="ColorStringConverter" />
+    </ResourceDictionary>
+  </Application.Resources>
 </Application>
