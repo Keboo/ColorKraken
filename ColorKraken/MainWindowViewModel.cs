@@ -72,7 +72,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             {
                 Themes.Add(theme);
             }
-            SelectedTheme = Themes.FirstOrDefault();
+            SelectedTheme = Themes.Where(x => !x.IsDefault).FirstOrDefault();
         }
         catch (Exception ex)
         {

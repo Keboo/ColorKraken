@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 
 using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace ColorKraken;
 
 public record class Theme(string Name, string FilePath)
-{ }
+{
+    public bool IsDefault => string.Equals(Path.GetExtension(FilePath), ".jsonc-default", System.StringComparison.Ordinal); 
+}
 
 public record class ThemeCategory(string Name, IReadOnlyList<ThemeColor> Colors)
 { }

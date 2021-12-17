@@ -62,8 +62,8 @@
       <materialDesign:ColorZone Mode="PrimaryLight">
         <StackPanel Orientation="Horizontal">
           <ComboBox ItemsSource="{Binding Themes}"
-                  SelectedItem="{Binding SelectedTheme}"
-                  MinWidth="200" Margin="10,3">
+                    SelectedItem="{Binding SelectedTheme}"
+                    MinWidth="200" Margin="10,3">
             <ComboBox.ItemTemplate>
               <DataTemplate DataType="{x:Type local:Theme}">
                 <TextBlock Text="{Binding Name}" />
