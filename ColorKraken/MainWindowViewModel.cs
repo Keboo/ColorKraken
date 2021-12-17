@@ -11,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
+using MaterialDesignThemes.Wpf;
+
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -21,7 +23,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 {
     public static IMessenger Messenger { get; } = new WeakReferenceMessenger();
 
-    public RelayCommand NewThemeCommand { get; }
+    public AsyncRelayCommand NewThemeCommand { get; }
 
     public ObservableCollection<Theme> Themes { get; } = new();
 
@@ -54,7 +56,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     {
         Messenger.Register(this);
 
-        NewThemeCommand = new RelayCommand(NewTheme);
+        NewThemeCommand = new AsyncRelayCommand(NewTheme);
 
         BindingOperations.EnableCollectionSynchronization(Themes, new object());
 
@@ -125,8 +127,11 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         }
     }
 
-    private void NewTheme()
+    private async Task NewTheme()
     {
+        string? newThemeName = await DialogHost.Show("", "Root") as string;
+
+        //TODO copy existing file
     }
 
     private static async IAsyncEnumerable<ThemeCategory> GetCategories(Theme theme)

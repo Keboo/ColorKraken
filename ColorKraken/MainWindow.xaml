@@ -32,71 +32,94 @@
   <Window.DataContext>
     <local:MainWindowViewModel />
   </Window.DataContext>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition />
-    </Grid.RowDefinitions>
+  <materialDesign:DialogHost Identifier="Root">
+    <materialDesign:DialogHost.DialogContentTemplate>
+      <DataTemplate>
+        <Grid Margin="15">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
 
-    <materialDesign:ColorZone Mode="PrimaryLight">
-      <StackPanel Orientation="Horizontal">
-        <ComboBox ItemsSource="{Binding Themes}"
+          <TextBlock Text="Enter the name for the new theme" />
+          <TextBox materialDesign:HintAssist.Hint="Name" Grid.Row="1" x:Name="NewThemeTextBox"/>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2" Margin="0,15,0,0">
+            <Button Content="_OK" IsDefault="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                  CommandParameter="{Binding Text, ElementName=NewThemeTextBox}" Margin="0,0,10,0"/>
+            <Button Content="_Cancel" IsCancel="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+          </StackPanel>
+        </Grid>
+      </DataTemplate>
+    </materialDesign:DialogHost.DialogContentTemplate>
+
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+
+      <materialDesign:ColorZone Mode="PrimaryLight">
+        <StackPanel Orientation="Horizontal">
+          <ComboBox ItemsSource="{Binding Themes}"
                   SelectedItem="{Binding SelectedTheme}"
                   MinWidth="200" Margin="10,3">
-          <ComboBox.ItemTemplate>
-            <DataTemplate DataType="{x:Type local:Theme}">
-              <TextBlock Text="{Binding Name}" />
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
-        <Button Content="_New" Command="{Binding NewThemeCommand}" VerticalAlignment="Center" />
-      </StackPanel>
-    </materialDesign:ColorZone>
+            <ComboBox.ItemTemplate>
+              <DataTemplate DataType="{x:Type local:Theme}">
+                <TextBlock Text="{Binding Name}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <Button Content="_New" Command="{Binding NewThemeCommand}" 
+                VerticalAlignment="Center" />
+        </StackPanel>
+      </materialDesign:ColorZone>
 
-    <ScrollViewer Grid.Row="1">
-      <ScrollViewer.CommandBindings>
-        <CommandBinding Command="{x:Static ApplicationCommands.Undo}"
+      <ScrollViewer Grid.Row="1">
+        <ScrollViewer.CommandBindings>
+          <CommandBinding Command="{x:Static ApplicationCommands.Undo}"
                         Executed="Undo_Executed"/>
-      </ScrollViewer.CommandBindings>
-      <ItemsControl ItemsSource="{Binding ThemeCategories}" Grid.IsSharedSizeScope="True">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate DataType="{x:Type local:ThemeCategory}">
-            <Expander Header="{Binding Name}" IsExpanded="True" HorizontalContentAlignment="Stretch">
-              <ItemsControl ItemsSource="{Binding Colors}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate DataType="{x:Type local:ThemeColor}">
-                    <Grid>
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="ColorName" Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                      </Grid.ColumnDefinitions>
-                      <TextBlock Text="{Binding Name}" Margin="10,2"/>
-                      <materialDesign:PopupBox Grid.Column="1" StaysOpen="True">
-                        <materialDesign:PopupBox.ToggleContent>
-                          <materialDesign:PackIcon Kind="Eyedropper" Foreground="{DynamicResource MaterialDesignBody}" />
-                        </materialDesign:PopupBox.ToggleContent>
-                        <materialDesign:PopupBox.Style>
-                          <Style TargetType="materialDesign:PopupBox" BasedOn="{StaticResource {x:Type materialDesign:PopupBox}}">
-                            <Style.Triggers>
-                              <Trigger Property="IsPopupOpen" Value="True">
-                                <Setter Property="PopupContent" Value="{Binding Converter={StaticResource PickerViewModelConverter}}" />
-                              </Trigger>
-                            </Style.Triggers>
-                          </Style>
-                        </materialDesign:PopupBox.Style>
-                          
-                        
-                      </materialDesign:PopupBox>
-                      <TextBox Text="{Binding Value}" Grid.Column="2"/>
-                    </Grid>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </Expander>
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </ScrollViewer>
-  </Grid>
+        </ScrollViewer.CommandBindings>
+        <ItemsControl ItemsSource="{Binding ThemeCategories}" Grid.IsSharedSizeScope="True">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type local:ThemeCategory}">
+              <Expander Header="{Binding Name}" IsExpanded="True" HorizontalContentAlignment="Stretch">
+                <ItemsControl ItemsSource="{Binding Colors}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:ThemeColor}">
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition SharedSizeGroup="ColorName" Width="Auto" />
+                          <ColumnDefinition Width="Auto" />
+                          <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Name}" Margin="10,2"/>
+                        <materialDesign:PopupBox Grid.Column="1" StaysOpen="True">
+                          <materialDesign:PopupBox.ToggleContent>
+                            <materialDesign:PackIcon Kind="Eyedropper" Foreground="{DynamicResource MaterialDesignBody}" />
+                          </materialDesign:PopupBox.ToggleContent>
+                          <materialDesign:PopupBox.Style>
+                            <Style TargetType="materialDesign:PopupBox" BasedOn="{StaticResource {x:Type materialDesign:PopupBox}}">
+                              <Style.Triggers>
+                                <Trigger Property="IsPopupOpen" Value="True">
+                                  <Setter Property="PopupContent" Value="{Binding Converter={StaticResource PickerViewModelConverter}}" />
+                                </Trigger>
+                              </Style.Triggers>
+                            </Style>
+                          </materialDesign:PopupBox.Style>
+
+
+                        </materialDesign:PopupBox>
+                        <TextBox Text="{Binding Value}" Grid.Column="2"/>
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Expander>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Grid>
+  </materialDesign:DialogHost>
 </Window>
