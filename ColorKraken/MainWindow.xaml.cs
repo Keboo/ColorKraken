@@ -20,9 +20,16 @@ namespace ColorKraken
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private async void Undo_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            await ViewModel.Undo();
         }
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
@@ -16,21 +17,24 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace ColorKraken;
 
-public record class BrushUpdated { }
-
 public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 {
     public static IMessenger Messenger { get; } = new WeakReferenceMessenger();
 
     public RelayCommand NewThemeCommand { get; }
+
     public ObservableCollection<Theme> Themes { get; } = new();
 
+    private int _ignoreChanges;
+
     private List<ThemeCategory>? _themeCategories;
-    public List<ThemeCategory>? ThemeCategories 
+    public List<ThemeCategory>? ThemeCategories
     {
         get => _themeCategories;
         set => SetProperty(ref _themeCategories, value);
     }
+
+    private List<Func<Task>> UndoStack { get; } = new();
 
     private Theme? _selectedTheme;
     public Theme? SelectedTheme
@@ -40,6 +44,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         {
             if (SetProperty(ref _selectedTheme, value))
             {
+                UndoStack.Clear();
                 Task.Run(() => LoadThemeBrushes(value));
             }
         }
@@ -47,6 +52,8 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     public MainWindowViewModel()
     {
+        Messenger.Register(this);
+
         NewThemeCommand = new RelayCommand(NewTheme);
 
         BindingOperations.EnableCollectionSynchronization(Themes, new object());
@@ -78,20 +85,43 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             ThemeCategories = null;
             return;
         }
-        Messenger.UnregisterAll(this);
-        try
+        if (Interlocked.CompareExchange(ref _ignoreChanges, 1, 0) == 0)
         {
-            List<ThemeCategory> categories = new();
-            await foreach(ThemeCategory category in GetCategories(value))
+            try
             {
-                categories.Add(category);
+                List<ThemeCategory> categories = new();
+                await foreach (ThemeCategory category in GetCategories(value))
+                {
+                    categories.Add(category);
+                }
+                ThemeCategories = categories;
             }
-            ThemeCategories = categories;
-            Messenger.Register(this);
+            catch (Exception ex)
+            {
+                //TODO
+            }
+            Interlocked.Exchange(ref _ignoreChanges, 0);
         }
-        catch (Exception ex)
+    }
+
+
+    public async Task Undo()
+    {
+        if (UndoStack.Count > 0)
         {
-            //TODO
+            var item = UndoStack[^1];
+            UndoStack.RemoveAt(UndoStack.Count - 1);
+            if (Interlocked.CompareExchange(ref _ignoreChanges, 1, 0) == 0)
+            {
+                try
+                {
+                    await item();
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref _ignoreChanges, 0);
+                }
+            }
         }
     }
 
@@ -107,7 +137,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         };
         using Stream fileStream = File.OpenRead(theme.FilePath);
         var jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(fileStream, options);
-        
+
         if (jsonObject?["themeValues"] is JsonObject themeValues)
         {
             foreach ((string name, JsonNode? child) in themeValues)
@@ -165,6 +195,19 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         var selectedTheme = SelectedTheme;
         if (selectedTheme is null) return;
 
+        if (_ignoreChanges != 0) return;
+
+        if (!string.IsNullOrWhiteSpace(message.PreviousValue))
+        {
+            ThemeColor color = message.Color;
+            string previousValue = message.PreviousValue;
+            UndoStack.Add(async () => 
+            {
+                color.Value = previousValue;
+                await WriteTheme(selectedTheme);
+            });
+        }
+
         await WriteTheme(selectedTheme);
     }
 
@@ -184,11 +227,11 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
         JsonObject themeValues = new();
 
-        foreach(ThemeCategory category in ThemeCategories ?? Enumerable.Empty<ThemeCategory>())
+        foreach (ThemeCategory category in ThemeCategories ?? Enumerable.Empty<ThemeCategory>())
         {
             JsonObject jsonCategory = new();
 
-            foreach(ThemeColor color in category.Colors)
+            foreach (ThemeColor color in category.Colors)
             {
                 jsonCategory[color.Name] = color.Value;
             }
@@ -201,31 +244,5 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         using Stream writeStream = File.Open(theme.FilePath, FileMode.Create);
         await JsonSerializer.SerializeAsync(writeStream, jsonObject, options);
     }
-}
-
-public record class Theme(string Name, string FilePath)
-{ }
-
-public record class ThemeCategory(string Name, IReadOnlyList<ThemeColor> Colors)
-{ }
-
-public record class ThemeColor(string Name) : INotifyPropertyChanged
-{
-    private string? _value;
-    public string? Value
-    {
-        get => _value;
-        set
-        {
-            if (_value != value)
-            {
-                _value = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-                MainWindowViewModel.Messenger.Send(new BrushUpdated());
-            }
-        }
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 }
 

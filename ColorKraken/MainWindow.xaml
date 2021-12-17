@@ -54,6 +54,10 @@
     </materialDesign:ColorZone>
 
     <ScrollViewer Grid.Row="1">
+      <ScrollViewer.CommandBindings>
+        <CommandBinding Command="{x:Static ApplicationCommands.Undo}"
+                        Executed="Undo_Executed"/>
+      </ScrollViewer.CommandBindings>
       <ItemsControl ItemsSource="{Binding ThemeCategories}" Grid.IsSharedSizeScope="True">
         <ItemsControl.ItemTemplate>
           <DataTemplate DataType="{x:Type local:ThemeCategory}">
