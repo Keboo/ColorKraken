@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -17,13 +18,20 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
-using System.Windows.Input;
-using System.Diagnostics;
-
 namespace ColorKraken;
 
 public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 {
+    private static JsonSerializerOptions JsonReadOptions { get; } = new()
+    {
+        ReadCommentHandling = JsonCommentHandling.Skip
+    };
+
+    private static JsonSerializerOptions JsonWriteOptions { get; } = new()
+    {
+        WriteIndented = true
+    };
+
     public static IMessenger Messenger { get; } = new WeakReferenceMessenger();
 
     public AsyncRelayCommand NewThemeCommand { get; }
@@ -51,7 +59,11 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             if (SetProperty(ref _selectedTheme, value))
             {
                 UndoStack.Clear();
-                Task.Run(() => LoadThemeBrushes(value));
+                Task.Run(async () =>
+                {
+                    await Task.Delay(300); //Let the animations finish before startin
+                    await LoadThemeBrushes(value);
+                });
             }
         }
     }
@@ -143,9 +155,34 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     private async Task NewTheme()
     {
-        string? newThemeName = await DialogHost.Show("", "Root") as string;
+        var content = new NewThemeViewModel(Themes);
+        if (await DialogHost.Show(content, "Root") as bool? == true &&
+            content.SelectedTheme is { } selectedTheme)
+        {
+            //TODO: Make sure new name does not already exist.
+            string filePath = content.Name;
+            //TODO: Sanitize input name
+            filePath += ".jsonc";
+            filePath = Path.Combine(GetThemesDirectoryPath(), filePath);
+
+            Theme theme = selectedTheme with
+            {
+                FilePath = filePath,
+                Name = content.Name
+            };
+            await WriteTheme(theme, jsonObject =>
+            {
+                JsonNode meta = jsonObject["meta"] ??= new JsonObject();
+                meta["name"] = content.Name;
+            });
+
+            Themes.Add(theme);
+            SelectedTheme = theme;
+
+        }
 
         //TODO copy existing file
+
     }
 
     private static async IAsyncEnumerable<ThemeCategory> GetCategories(Theme theme)
@@ -190,26 +227,34 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         };
         foreach (string file in Directory.EnumerateFiles(themeDirectory))
         {
-            JsonObject? jsonObject;
-            try
+            if (await ReadThemeAsync(file) is { } theme)
             {
-                using Stream fileStream = File.OpenRead(file);
-                jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(fileStream, options);
-            }
-            catch (Exception _)
-            {
-                //TODO
-                continue;
-            }
-            if (jsonObject is not null &&
-                jsonObject["meta"] is JsonObject metadata &&
-                metadata["name"] is JsonValue nameValue &&
-                !string.IsNullOrWhiteSpace(nameValue.GetValue<string>()))
-            {
-                Theme theme = new(nameValue.GetValue<string>(), file);
                 yield return theme;
             }
         }
+    }
+
+    private static async Task<Theme?> ReadThemeAsync(string filePath)
+    {
+        JsonObject? jsonObject;
+        try
+        {
+            using Stream fileStream = File.OpenRead(filePath);
+            jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(fileStream, JsonReadOptions);
+        }
+        catch (Exception _)
+        {
+            //TODO
+            return null;
+        }
+        if (jsonObject is not null &&
+            jsonObject["meta"] is JsonObject metadata &&
+            metadata["name"] is JsonValue nameValue &&
+            !string.IsNullOrWhiteSpace(nameValue.GetValue<string>()))
+        {
+            return new Theme(nameValue.GetValue<string>(), filePath);
+        }
+        return null;
     }
 
     async void IRecipient<BrushUpdated>.Receive(BrushUpdated message)
@@ -223,48 +268,60 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         {
             ThemeColor color = message.Color;
             string previousValue = message.PreviousValue;
-            UndoStack.Add(async () => 
+            UndoStack.Add(async () =>
             {
                 color.Value = previousValue;
-                await WriteTheme(selectedTheme);
+                await SaveCurrentAsTheme(selectedTheme);
             });
         }
 
-        await WriteTheme(selectedTheme);
+        await SaveCurrentAsTheme(selectedTheme);
     }
 
-    private async Task WriteTheme(Theme theme)
+    private async Task SaveCurrentAsTheme(Theme theme)
     {
-        JsonSerializerOptions options = new()
+        await WriteTheme(theme, jsonObject =>
         {
-            ReadCommentHandling = JsonCommentHandling.Skip,
-            WriteIndented = true
-        };
-        JsonObject? jsonObject;
-        using (Stream readStream = File.OpenRead(theme.FilePath))
-        {
-            jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(readStream, options);
-        }
-        if (jsonObject is null) return;
+            JsonObject themeValues = new();
 
-        JsonObject themeValues = new();
-
-        foreach (ThemeCategory category in ThemeCategories ?? Enumerable.Empty<ThemeCategory>())
-        {
-            JsonObject jsonCategory = new();
-
-            foreach (ThemeColor color in category.Colors)
+            foreach (ThemeCategory category in ThemeCategories ?? Enumerable.Empty<ThemeCategory>())
             {
-                jsonCategory[color.Name] = color.Value;
+                JsonObject jsonCategory = new();
+
+                foreach (ThemeColor color in category.Colors)
+                {
+                    jsonCategory[color.Name] = color.Value;
+                }
+
+                themeValues[category.Name] = jsonCategory;
             }
 
-            themeValues[category.Name] = jsonCategory;
-        }
-
-        jsonObject["themeValues"] = themeValues;
-
-        using Stream writeStream = File.Open(theme.FilePath, FileMode.Create);
-        await JsonSerializer.SerializeAsync(writeStream, jsonObject, options);
+            jsonObject["themeValues"] = themeValues;
+        });
     }
+
+    private async Task WriteTheme(Theme theme, Action<JsonObject> applyThemeChanges)
+    {
+        try
+        {
+            JsonObject? jsonObject;
+            using (Stream readStream = File.OpenRead(theme.FilePath))
+            {
+                jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(readStream, JsonReadOptions);
+            }
+            if (jsonObject is null) return;
+
+            applyThemeChanges(jsonObject);
+
+            using Stream writeStream = File.Open(theme.FilePath, FileMode.Create, FileAccess.Write);
+            await JsonSerializer.SerializeAsync(writeStream, jsonObject, JsonWriteOptions);
+        }
+        catch (Exception _)
+        {
+
+        }
+    }
+
+
 }
 
