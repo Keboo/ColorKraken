@@ -61,6 +61,10 @@
 
       <materialDesign:ColorZone Mode="PrimaryLight">
         <StackPanel Orientation="Horizontal">
+          <Button Content="{materialDesign:PackIcon Kind=FolderOpen}" 
+                  Command="{Binding OpenThemeFolderCommand}"
+                  ToolTip="Open theme folder"/>
+          
           <ComboBox ItemsSource="{Binding Themes}"
                     SelectedItem="{Binding SelectedTheme}"
                     MinWidth="200" Margin="10,3">

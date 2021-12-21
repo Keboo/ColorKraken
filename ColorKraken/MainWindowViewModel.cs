@@ -17,6 +17,9 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
+using System.Windows.Input;
+using System.Diagnostics;
+
 namespace ColorKraken;
 
 public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
@@ -24,6 +27,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     public static IMessenger Messenger { get; } = new WeakReferenceMessenger();
 
     public AsyncRelayCommand NewThemeCommand { get; }
+    public IRelayCommand OpenThemeFolderCommand { get; }
 
     public ObservableCollection<Theme> Themes { get; } = new();
 
@@ -57,10 +61,20 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         Messenger.Register(this);
 
         NewThemeCommand = new AsyncRelayCommand(NewTheme);
+        OpenThemeFolderCommand = new RelayCommand(OnOpenThemeFolder);
 
         BindingOperations.EnableCollectionSynchronization(Themes, new object());
 
         Task.Run(LoadThemes);
+    }
+
+    private void OnOpenThemeFolder()
+    {
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = GetThemesDirectoryPath(),
+            UseShellExecute = true
+        });
     }
 
     private async Task LoadThemes()
@@ -163,9 +177,12 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     }
 
+    private static string GetThemesDirectoryPath()
+        => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".gitkraken", "themes");
+
     private static async IAsyncEnumerable<Theme> GetThemes()
     {
-        string themeDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".gitkraken", "themes");
+        string themeDirectory = GetThemesDirectoryPath();
 
         JsonSerializerOptions options = new()
         {
