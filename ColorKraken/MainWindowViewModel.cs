@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -34,6 +33,8 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     public static IMessenger Messenger { get; } = new WeakReferenceMessenger();
 
+    public SnackbarMessageQueue MessageQueue { get; } = new();
+
     public AsyncRelayCommand NewThemeCommand { get; }
     public IRelayCommand OpenThemeFolderCommand { get; }
 
@@ -61,7 +62,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
                 UndoStack.Clear();
                 Task.Run(async () =>
                 {
-                    await Task.Delay(300); //Let the animations finish before startin
+                    await Task.Delay(300); //Let the animations finish before startin, yuck
                     await LoadThemeBrushes(value);
                 });
             }
@@ -100,9 +101,9 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             }
             SelectedTheme = Themes.Where(x => !x.IsDefault).FirstOrDefault();
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-
+            ShowError("Error loading theme file", e.ToString());
         }
     }
 
@@ -124,9 +125,9 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
                 }
                 ThemeCategories = categories;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //TODO
+                ShowError("Error loading theme resources", e.ToString());
             }
             Interlocked.Exchange(ref _ignoreChanges, 0);
         }
@@ -157,7 +158,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     {
         var content = new NewThemeViewModel(Themes);
         if (await DialogHost.Show(content, "Root") as bool? == true &&
-            content.SelectedTheme is { } selectedTheme)
+            content.SelectedTheme is { } baseTheme)
         {
             //TODO: Make sure new name does not already exist.
             string filePath = content.Name;
@@ -165,7 +166,19 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             filePath += ".jsonc";
             filePath = Path.Combine(GetThemesDirectoryPath(), filePath);
 
-            Theme theme = selectedTheme with
+            try
+            {
+                File.Copy(baseTheme.FilePath, filePath, true);
+                //The default files are marked as readonly. Need to clear the flag.
+                File.SetAttributes(filePath, FileAttributes.Normal);
+            }
+            catch(Exception e)
+            {
+                ShowError("Error reating new theme file", e.ToString());
+                return;
+            }
+
+            Theme theme = baseTheme with
             {
                 FilePath = filePath,
                 Name = content.Name
@@ -180,8 +193,6 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             SelectedTheme = theme;
 
         }
-
-        //TODO copy existing file
 
     }
 
@@ -217,24 +228,21 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     private static string GetThemesDirectoryPath()
         => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".gitkraken", "themes");
 
-    private static async IAsyncEnumerable<Theme> GetThemes()
+    private async IAsyncEnumerable<Theme> GetThemes()
     {
         string themeDirectory = GetThemesDirectoryPath();
 
-        JsonSerializerOptions options = new()
-        {
-            ReadCommentHandling = JsonCommentHandling.Skip
-        };
         foreach (string file in Directory.EnumerateFiles(themeDirectory))
         {
-            if (await ReadThemeAsync(file) is { } theme)
+            if (Path.GetExtension(file).StartsWith(".jsonc", StringComparison.OrdinalIgnoreCase) &&
+                await ReadThemeAsync(file) is { } theme)
             {
                 yield return theme;
             }
         }
     }
 
-    private static async Task<Theme?> ReadThemeAsync(string filePath)
+    private async Task<Theme?> ReadThemeAsync(string filePath)
     {
         JsonObject? jsonObject;
         try
@@ -242,9 +250,9 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             using Stream fileStream = File.OpenRead(filePath);
             jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(fileStream, JsonReadOptions);
         }
-        catch (Exception _)
+        catch (Exception e)
         {
-            //TODO
+            ShowError("Error reading theme file", e.ToString());
             return null;
         }
         if (jsonObject is not null &&
@@ -313,15 +321,23 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
             applyThemeChanges(jsonObject);
 
-            using Stream writeStream = File.Open(theme.FilePath, FileMode.Create, FileAccess.Write);
+            using Stream writeStream = File.Open(theme.FilePath, FileMode.Create, FileAccess.Write, FileShare.Read);
             await JsonSerializer.SerializeAsync(writeStream, jsonObject, JsonWriteOptions);
         }
-        catch (Exception _)
+        catch (Exception e)
         {
-
+            ShowError($"Error writing theme file '{Path.GetFileName(theme.FilePath)}'", e.ToString());
         }
     }
 
+    private void ShowError(string message, string details)
+        => MessageQueue.Enqueue(message, "Details", OnShowErrorDetails, details);
 
+    private async void OnShowErrorDetails(string? details)
+    {
+        if (string.IsNullOrEmpty(details)) return;
+        await DialogHost.Show(new ErrorDetailsViewModel(details), "Root");
+    }
 }
 
+public record class ErrorDetailsViewModel(string Details) { }

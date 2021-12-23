@@ -29,7 +29,7 @@
       </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="NewThemeTemplate" DataType="{x:Type local:NewThemeViewModel}">
+    <DataTemplate DataType="{x:Type local:NewThemeViewModel}">
       <Grid Margin="15">
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />
@@ -63,11 +63,26 @@
         </StackPanel>
       </Grid>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:ErrorDetailsViewModel}">
+      <Grid Margin="15">
+
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding Details}" TextWrapping="Wrap" />
+
+        <Button Content="_OK" IsDefault="True" IsCancel="True" Grid.Row="1" HorizontalAlignment="Right"
+                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+      </Grid>
+    </DataTemplate>
   </Window.Resources>
   <Window.DataContext>
     <local:MainWindowViewModel />
   </Window.DataContext>
-  <materialDesign:DialogHost Identifier="Root" DialogContentTemplate="{StaticResource NewThemeTemplate}">
+  <materialDesign:DialogHost Identifier="Root">
     <Grid>
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
@@ -100,6 +115,16 @@
                         Executed="Undo_Executed"/>
         </ScrollViewer.CommandBindings>
         <ItemsControl ItemsSource="{Binding ThemeCategories}" Grid.IsSharedSizeScope="True">
+          <ItemsControl.Style>
+            <Style TargetType="ItemsControl" BasedOn="{StaticResource {x:Type ItemsControl}}">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedTheme.IsDefault}" Value="True">
+                  <Setter Property="IsEnabled" Value="False" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </ItemsControl.Style>
+          
           <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type local:ThemeCategory}">
               <Expander Header="{Binding Name}" IsExpanded="True" HorizontalContentAlignment="Stretch">
@@ -139,6 +164,9 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </ScrollViewer>
+
+      <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}" Grid.Row="1" />
+
     </Grid>
   </materialDesign:DialogHost>
 </Window>
