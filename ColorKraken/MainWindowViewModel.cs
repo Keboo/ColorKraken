@@ -160,12 +160,17 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         if (await DialogHost.Show(content, "Root") as bool? == true &&
             content.SelectedTheme is { } baseTheme)
         {
-            //TODO: Make sure new name does not already exist.
             string filePath = content.Name;
-            //TODO: Sanitize input name
+            foreach(var c in Path.GetInvalidFileNameChars())
+            {
+                filePath = filePath.Replace(c, '_');
+            }
+
             filePath += ".jsonc";
             filePath = Path.Combine(GetThemesDirectoryPath(), filePath);
 
+            //TODO: Make sure new name does not already exist.
+            //TODO: Make sure new does not math source.
             try
             {
                 File.Copy(baseTheme.FilePath, filePath, true);
