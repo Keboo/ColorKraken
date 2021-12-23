@@ -62,7 +62,6 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
                 UndoStack.Clear();
                 Task.Run(async () =>
                 {
-                    await Task.Delay(300); //Let the animations finish before startin, yuck
                     await LoadThemeBrushes(value);
                 });
             }

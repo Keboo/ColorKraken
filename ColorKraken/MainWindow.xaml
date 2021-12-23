@@ -127,7 +127,7 @@
           
           <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type local:ThemeCategory}">
-              <Expander Header="{Binding Name}" IsExpanded="True" HorizontalContentAlignment="Stretch">
+              <GroupBox Header="{Binding Name}" HorizontalContentAlignment="Stretch" Margin="1,2">
                 <ItemsControl ItemsSource="{Binding Colors}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type local:ThemeColor}">
@@ -159,7 +159,7 @@
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
-              </Expander>
+              </GroupBox>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
