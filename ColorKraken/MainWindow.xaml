@@ -39,11 +39,13 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Enter the name for the new theme" />
-        <TextBox Text="{Binding Name}" materialDesign:HintAssist.Hint="Name" Grid.Row="1" />
+        <TextBox Text="{Binding Name}" materialDesign:HintAssist.Hint="Name" Grid.Row="1" 
+                 Margin="0,10"/>
 
         <ComboBox materialDesign:HintAssist.Hint="Based on theme" 
                   ItemsSource="{Binding Themes}"
-                  SelectedItem="{Binding SelectedTheme}" 
+                  SelectedItem="{Binding SelectedTheme}"
+                  Margin="0,5"
                   Grid.Row="2">
           <ComboBox.ItemTemplate>
             <DataTemplate DataType="{x:Type local:Theme}">
@@ -90,23 +92,35 @@
       </Grid.RowDefinitions>
 
       <materialDesign:ColorZone Mode="PrimaryLight">
-        <StackPanel Orientation="Horizontal">
-          <Button Content="{materialDesign:PackIcon Kind=FolderOpen}" 
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <StackPanel Orientation="Horizontal">
+            <Button Content="{materialDesign:PackIcon Kind=FolderOpen}" 
                   Command="{Binding OpenThemeFolderCommand}"
                   ToolTip="Open theme folder"/>
 
-          <ComboBox ItemsSource="{Binding Themes}"
+            <ComboBox ItemsSource="{Binding Themes}"
                     SelectedItem="{Binding SelectedTheme}"
                     MinWidth="200" Margin="10,3">
-            <ComboBox.ItemTemplate>
-              <DataTemplate DataType="{x:Type local:Theme}">
-                <TextBlock Text="{Binding Name}" />
-              </DataTemplate>
-            </ComboBox.ItemTemplate>
-          </ComboBox>
-          <Button Content="_New" Command="{Binding NewThemeCommand}" 
+              <ComboBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:Theme}">
+                  <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Content="_New" Command="{Binding NewThemeCommand}" 
                 VerticalAlignment="Center" />
-        </StackPanel>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Grid.Column="1">
+            <Button Content="{materialDesign:PackIcon Kind=Delete}" Command="{Binding DeleteCommand}" 
+                    ToolTip="Delete current theme"/>
+            <Button Content="{materialDesign:PackIcon Kind=Refresh}" Command="{Binding RefreshCommand}" 
+                    ToolTip="Reload all themes" Margin="5,0"/>
+          </StackPanel>
+        </Grid>
       </materialDesign:ColorZone>
 
       <ScrollViewer Grid.Row="1">
@@ -124,7 +138,7 @@
               </Style.Triggers>
             </Style>
           </ItemsControl.Style>
-          
+
           <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type local:ThemeCategory}">
               <GroupBox Header="{Binding Name}" HorizontalContentAlignment="Stretch" Margin="1,2">

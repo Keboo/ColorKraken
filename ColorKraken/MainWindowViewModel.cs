@@ -36,6 +36,8 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     public SnackbarMessageQueue MessageQueue { get; } = new();
 
     public AsyncRelayCommand NewThemeCommand { get; }
+    public IRelayCommand DeleteCommand { get; }
+    public IRelayCommand RefreshCommand { get; }
     public IRelayCommand OpenThemeFolderCommand { get; }
 
     public ObservableCollection<Theme> Themes { get; } = new();
@@ -59,6 +61,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         {
             if (SetProperty(ref _selectedTheme, value))
             {
+                DeleteCommand.RaiseCanExecuteChanged();
                 UndoStack.Clear();
                 Task.Run(async () =>
                 {
@@ -74,6 +77,8 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
         NewThemeCommand = new AsyncRelayCommand(NewTheme);
         OpenThemeFolderCommand = new RelayCommand(OnOpenThemeFolder);
+        DeleteCommand = new RelayCommand(OnDelete, () => SelectedTheme != null && SelectedTheme.IsDefault == false);
+        RefreshCommand = new AsyncRelayCommand(OnRefresh);
 
         BindingOperations.EnableCollectionSynchronization(Themes, new object());
 
@@ -341,6 +346,32 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     {
         if (string.IsNullOrEmpty(details)) return;
         await DialogHost.Show(new ErrorDetailsViewModel(details), "Root");
+    }
+
+    private void OnDelete()
+    {
+        //TODO: prompt
+        if (SelectedTheme is { } selectedTheme && selectedTheme.IsDefault == false)
+        {
+            try
+            {
+                File.Delete(selectedTheme.FilePath);
+            }
+            catch(Exception e)
+            {
+                ShowError($"Error deleting {Path.GetFileName(selectedTheme.FilePath)}", e.ToString());
+                return;
+            }
+            SelectedTheme = null;
+            Themes.Remove(selectedTheme);
+        }
+    }
+
+    public async Task OnRefresh()
+    {
+        SelectedTheme = null;
+        Themes.Clear();
+        await Task.Run(LoadThemes);
     }
 }
 
