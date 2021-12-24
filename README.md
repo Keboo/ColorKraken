@@ -8,3 +8,10 @@ Though the color picker on each theme color defaults to an RGB value, the themin
 Once you create a theme, in GitKraken, open Preferences >> UI Customization and select your new theme from the Theme drop down. Once selected changes you make in this app will appear immediately in GitKraken. Check out changing `app__bg0` to change the main application background color for a very noticiple change.
 
 ![image](https://user-images.githubusercontent.com/952248/147212439-57529a9e-0f0e-4177-9941-ed7e1bc741b6.png)
+
+## Testing
+You can download the NuGet package that would be pushed to chocolatey and test it locally. Because it takes a dependency on the dotnet 6 desktop runtime you will need to run the following command from the directory where the downloaded nupkg is located. If it is a pre-release package you will also need to specify `--pre`
+
+```ps
+choco install colorkraken -dv -source "'.;https://community.chocolatey.org/api/v2/'" --pre
+```

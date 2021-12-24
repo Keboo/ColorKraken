@@ -23,6 +23,7 @@ env:
 
 jobs:
   build:
+    if: ${{ github.repository == 'Keboo/ColorKraken' }}
     runs-on: windows-latest
 
     steps:
@@ -62,9 +63,12 @@ jobs:
       run: choco pack --version ${{ env.nugetVersion }} --out ${{ github.workspace }}\choco
       working-directory: choco\colorkraken
     
-    - name: Upload Artifacts
-      #if: ${{ github.event_name != 'pull_request' }}
+    - name: Upload Choco Package
       uses: actions/upload-artifact@v2
       with:
-        name: NuGet
+        name: Chocolatey NuGet
         path: ${{ github.workspace }}\choco\*.nupkg
+
+    - name: Push Choco Package
+      if: ${{ env.preRelease == false }}
+      run: choco push choco\*.nupkg -s https://push.chocolatey.org/ --key ${{ secrets.CHOCO_API_KEY }}
