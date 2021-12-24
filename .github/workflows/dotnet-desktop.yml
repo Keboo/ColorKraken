@@ -54,14 +54,17 @@ jobs:
     
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal --configuration ${{ env.configuration }} --logger "console" --blame-hang --blame-hang-timeout 5m
+    
+    - name: Publish
+      run: dotnet publish --configuration ${{ env.configuration }} --no-build --output ${{ github.workspace }}\choco\colorkraken\tools
 
-    - name: Pack
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet pack -p:PackageVersion=${{ env.nugetVersion }} --configuration ${{ env.configuration }} --no-build
+    - name: Choco Pack
+      run: choco pack --version ${{ env.nugetVersion }} --out ${{ github.workspace }}\choco
+      working-directory: choco\colorkraken
     
     - name: Upload Artifacts
-      if: ${{ github.event_name != 'pull_request' }}
+      #if: ${{ github.event_name != 'pull_request' }}
       uses: actions/upload-artifact@v2
       with:
         name: NuGet
-        path: ${{ github.workspace }}\**\*nupkg
+        path: ${{ github.workspace }}\choco\*.nupkg
