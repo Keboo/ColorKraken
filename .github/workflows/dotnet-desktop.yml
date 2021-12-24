@@ -74,5 +74,5 @@ jobs:
         path: ${{ github.workspace }}\choco\*.nupkg
 
     - name: Choco Package Push
-      if: ${{ env.preRelease == false }}
+      if: ${{ env.preRelease == 'false' }}
       run: choco push choco\*.nupkg -s https://push.chocolatey.org/ --key ${{ secrets.CHOCO_API_KEY }}
