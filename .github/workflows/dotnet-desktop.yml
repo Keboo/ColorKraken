@@ -24,13 +24,14 @@ env:
 jobs:
   build:
     if: ${{ github.repository == 'Keboo/ColorKraken' }}
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     
     - name: Set Version
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
         if ("${{ github.ref }}".startsWith("refs/tags/v")) {
           $tagVersion = "${{ github.ref }}".substring(11)
@@ -57,13 +58,16 @@ jobs:
     #  run: dotnet test --no-build --verbosity normal --configuration ${{ env.configuration }} --logger "console" --blame-hang --blame-hang-timeout 5m
     
     - name: Publish
+      if: ${{ github.event_name != 'pull_request' }}
       run: dotnet publish --configuration ${{ env.configuration }} --no-build --output ${{ github.workspace }}\choco\colorkraken\tools
 
     - name: Choco Pack
+      if: ${{ github.event_name != 'pull_request' }}
       run: choco pack --version ${{ env.nugetVersion }} --out ${{ github.workspace }}\choco
       working-directory: choco\colorkraken
     
     - name: Choco Package Upload
+      if: ${{ github.event_name != 'pull_request' }}
       uses: actions/upload-artifact@v2
       with:
         name: Chocolatey NuGet
