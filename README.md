@@ -1,7 +1,16 @@
 # ColorKraken
 
 A simple WPF application for editing GitKraken themes.
-[GitKraken v8.2.0](https://support.gitkraken.com/release-notes/current/#version-820) introduced custom color themes. This simple desktop applications allows for easy editing of those themes. To get started simply download the app from the latest [Release](https://github.com/Keboo/ColorKraken/releases)
+[GitKraken v8.2.0](https://support.gitkraken.com/release-notes/current/#version-820) introduced custom color themes. This simple desktop applications allows for easy editing of those themes. 
+
+## Installation
+You can download pre-compiled versions of the application from the latest [Release](https://github.com/Keboo/ColorKraken/releases).
+Alternatively you can install using [chocolatey](https://community.chocolatey.org/packages/colorkraken)
+```ps
+choco install colorkraken
+```
+
+## About
 
 Though the color picker on each theme color defaults to an RGB value, the theming in GitKraken supports more advanced CSS functions (such as lighten(), fade(), etc). Check out the existing themes to get an idea of what is possible. 
 
@@ -9,7 +18,7 @@ Once you create a theme, in GitKraken, open Preferences >> UI Customization and 
 
 ![image](https://user-images.githubusercontent.com/952248/147212439-57529a9e-0f0e-4177-9941-ed7e1bc741b6.png)
 
-## Testing
+## Local Chocolately Package Testing
 You can download the NuGet package that would be pushed to chocolatey and test it locally. Because it takes a dependency on the dotnet 6 desktop runtime you will need to run the following command from the directory where the downloaded nupkg is located. If it is a pre-release package you will also need to specify `--pre`
 
 ```ps
