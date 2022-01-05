@@ -12,7 +12,7 @@ public class ColorPickerViewModel : ObservableObject
     TypeDescriptor.GetConverter(typeof(Color));
 
     private Color? _color;
-    private ThemeColor _themeColor;
+    private readonly ThemeColor _themeColor;
 
     public RelayCommand ApplyCommand { get; }
 

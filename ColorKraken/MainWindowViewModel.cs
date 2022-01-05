@@ -31,8 +31,6 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         WriteIndented = true
     };
 
-    public static IMessenger Messenger { get; } = new WeakReferenceMessenger();
-
     public SnackbarMessageQueue MessageQueue { get; } = new();
 
     public AsyncRelayCommand NewThemeCommand { get; }
@@ -71,9 +69,11 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         }
     }
 
-    public MainWindowViewModel()
+    public ThemeColorFactory ThemeColorFactory { get; }
+
+    public MainWindowViewModel(IMessenger messenger, ThemeColorFactory themeColorFactory)
     {
-        Messenger.Register(this);
+        messenger.Register(this);
 
         NewThemeCommand = new AsyncRelayCommand(NewTheme);
         OpenThemeFolderCommand = new RelayCommand(OnOpenThemeFolder);
@@ -83,6 +83,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         BindingOperations.EnableCollectionSynchronization(Themes, new object());
 
         Task.Run(LoadThemes);
+        ThemeColorFactory = themeColorFactory;
     }
 
     private void OnOpenThemeFolder()
@@ -205,7 +206,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     }
 
-    private static async IAsyncEnumerable<ThemeCategory> GetCategories(Theme theme)
+    private async IAsyncEnumerable<ThemeCategory> GetCategories(Theme theme)
     {
         JsonSerializerOptions options = new()
         {
@@ -225,7 +226,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
                 foreach ((string colorName, JsonNode? colorNode) in childObject)
                 {
                     string? value = colorNode?.GetValue<string>();
-                    colors.Add(new ThemeColor(colorName) { Value = value });
+                    colors.Add(ThemeColorFactory(colorName, value));
                 }
 
                 yield return new ThemeCategory(name, colors);

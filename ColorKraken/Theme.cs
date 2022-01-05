@@ -14,7 +14,9 @@ public record class Theme(string Name, string FilePath)
 public record class ThemeCategory(string Name, IReadOnlyList<ThemeColor> Colors)
 { }
 
-public record class ThemeColor(string Name) : INotifyPropertyChanged
+public delegate ThemeColor ThemeColorFactory(string name, string? value);
+
+public record class ThemeColor(string Name, IMessenger Messenger) : INotifyPropertyChanged
 {
     private string? _value;
     public string? Value
@@ -27,7 +29,7 @@ public record class ThemeColor(string Name) : INotifyPropertyChanged
             {
                 _value = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-                MainWindowViewModel.Messenger.Send(new BrushUpdated(this, previousValue));
+                Messenger.Send(new BrushUpdated(this, previousValue));
             }
         }
     }
