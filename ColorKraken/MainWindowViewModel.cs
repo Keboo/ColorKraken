@@ -19,6 +19,11 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace ColorKraken;
 
+public interface IProcessService
+{
+    void Start(ProcessStartInfo startInfo);
+}
+
 public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 {
     private static JsonSerializerOptions JsonReadOptions { get; } = new()
@@ -32,6 +37,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     };
 
     public IMessenger Messenger { get; }
+    public IProcessService ProcessService { get; }
 
     //public IThemeColorFactory ThemeColorFactory { get; }
     public CreateTheme CreateThemeFactory { get; }
@@ -77,11 +83,12 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     public MainWindowViewModel(
         ISnackbarMessageQueue messageQueue,
         IMessenger messenger,
-        IServiceProvider serviceProvider,
+        IProcessService processService,
         CreateTheme createThemeFactory)
     {
         MessageQueue = messageQueue ?? throw new ArgumentNullException(nameof(messageQueue));
         Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+        ProcessService = processService ?? throw new ArgumentNullException(nameof(processService));
         CreateThemeFactory = createThemeFactory;
         //ThemeColorFactory = themeColorFactory ?? throw new ArgumentNullException(nameof(themeColorFactory));
         Messenger.Register(this);
@@ -96,7 +103,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     private void OnOpenThemeFolder()
     {
-        Process.Start(new ProcessStartInfo
+        ProcessService.Start(new ProcessStartInfo
         {
             FileName = GetThemesDirectoryPath(),
             UseShellExecute = true
@@ -105,6 +112,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     private async Task LoadThemes()
     {
+        await Task.Delay(100);
         Themes.Clear();
         try
         {
