@@ -31,9 +31,12 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         WriteIndented = true
     };
 
-    public static IMessenger Messenger { get; } = new WeakReferenceMessenger();
+    public IMessenger Messenger { get; }
 
-    public SnackbarMessageQueue MessageQueue { get; } = new();
+    //public IThemeColorFactory ThemeColorFactory { get; }
+    public CreateTheme CreateThemeFactory { get; }
+
+    public ISnackbarMessageQueue MessageQueue { get; }
 
     public AsyncRelayCommand NewThemeCommand { get; }
     public IRelayCommand DeleteCommand { get; }
@@ -71,8 +74,16 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         }
     }
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(
+        ISnackbarMessageQueue messageQueue,
+        IMessenger messenger,
+        IServiceProvider serviceProvider,
+        CreateTheme createThemeFactory)
     {
+        MessageQueue = messageQueue ?? throw new ArgumentNullException(nameof(messageQueue));
+        Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
+        CreateThemeFactory = createThemeFactory;
+        //ThemeColorFactory = themeColorFactory ?? throw new ArgumentNullException(nameof(themeColorFactory));
         Messenger.Register(this);
 
         NewThemeCommand = new AsyncRelayCommand(NewTheme);
@@ -81,8 +92,6 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         RefreshCommand = new AsyncRelayCommand(OnRefresh);
 
         BindingOperations.EnableCollectionSynchronization(Themes, new object());
-
-        Task.Run(LoadThemes);
     }
 
     private void OnOpenThemeFolder()
@@ -136,7 +145,6 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             Interlocked.Exchange(ref _ignoreChanges, 0);
         }
     }
-
 
     public async Task Undo()
     {
@@ -205,7 +213,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     }
 
-    private static async IAsyncEnumerable<ThemeCategory> GetCategories(Theme theme)
+    private async IAsyncEnumerable<ThemeCategory> GetCategories(Theme theme)
     {
         JsonSerializerOptions options = new()
         {
@@ -225,7 +233,9 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
                 foreach ((string colorName, JsonNode? colorNode) in childObject)
                 {
                     string? value = colorNode?.GetValue<string>();
-                    colors.Add(new ThemeColor(colorName) { Value = value });
+                    colors.Add(CreateThemeFactory(colorName, value));
+                    //colors.Add(ThemeColorFactory.Create(colorName, value));
+                    //colors.Add(new ThemeColor(colorName, Messenger) { Value = value });
                 }
 
                 yield return new ThemeCategory(name, colors);

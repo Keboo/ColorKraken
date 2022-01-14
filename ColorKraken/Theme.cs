@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 
@@ -14,7 +15,27 @@ public record class Theme(string Name, string FilePath)
 public record class ThemeCategory(string Name, IReadOnlyList<ThemeColor> Colors)
 { }
 
-public record class ThemeColor(string Name) : INotifyPropertyChanged
+public interface IThemeColorFactory
+{
+    ThemeColor Create(string name, string? initialValue);
+}
+
+public class ThemeColorFactory : IThemeColorFactory
+{
+    public ThemeColorFactory(IMessenger messenger)
+    {
+        Messenger = messenger;
+    }
+
+    public IMessenger Messenger { get; }
+
+    public ThemeColor Create(string name, string? initialValue)
+        => new(name, Messenger) { Value = initialValue };
+}
+
+public delegate ThemeColor CreateTheme(string name, string? initialValue);
+
+public record class ThemeColor(string Name, IMessenger Messenger) : INotifyPropertyChanged
 {
     private string? _value;
     public string? Value
@@ -27,7 +48,7 @@ public record class ThemeColor(string Name) : INotifyPropertyChanged
             {
                 _value = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-                MainWindowViewModel.Messenger.Send(new BrushUpdated(this, previousValue));
+                Messenger.Send(new BrushUpdated(this, previousValue));
             }
         }
     }
