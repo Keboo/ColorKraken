@@ -39,6 +39,8 @@ namespace ColorKraken
                 {
                     services.AddSingleton<MainWindow>();
                     services.AddSingleton<MainWindowViewModel>();
+                    services.AddSingleton<IProcessService, ProcessService>();
+                    services.AddSingleton<IThemeManager, ThemeManager>();
 
                     services.AddSingleton<WeakReferenceMessenger>();
                     services.AddSingleton<IMessenger, WeakReferenceMessenger>(provider => provider.GetRequiredService<WeakReferenceMessenger>());

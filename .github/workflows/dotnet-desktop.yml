@@ -31,7 +31,6 @@ jobs:
       uses: actions/checkout@v2
     
     - name: Set Version
-      if: ${{ github.event_name != 'pull_request' }}
       run: |
         if ("${{ github.ref }}".startsWith("refs/tags/v")) {
           $tagVersion = "${{ github.ref }}".substring(11)

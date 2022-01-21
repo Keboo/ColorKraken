@@ -2,11 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -21,20 +17,8 @@ namespace ColorKraken;
 
 public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 {
-    private static JsonSerializerOptions JsonReadOptions { get; } = new()
-    {
-        ReadCommentHandling = JsonCommentHandling.Skip
-    };
-
-    private static JsonSerializerOptions JsonWriteOptions { get; } = new()
-    {
-        WriteIndented = true
-    };
-
     public IMessenger Messenger { get; }
-
-    //public IThemeColorFactory ThemeColorFactory { get; }
-    public CreateTheme CreateThemeFactory { get; }
+    public IThemeManager ThemeManager { get; }
 
     public ISnackbarMessageQueue MessageQueue { get; }
 
@@ -77,12 +61,11 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     public MainWindowViewModel(
         ISnackbarMessageQueue messageQueue,
         IMessenger messenger,
-        IServiceProvider serviceProvider,
-        CreateTheme createThemeFactory)
+        IThemeManager themeManager)
     {
         MessageQueue = messageQueue ?? throw new ArgumentNullException(nameof(messageQueue));
         Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
-        CreateThemeFactory = createThemeFactory;
+        ThemeManager = themeManager ?? throw new ArgumentNullException(nameof(themeManager));
         //ThemeColorFactory = themeColorFactory ?? throw new ArgumentNullException(nameof(themeColorFactory));
         Messenger.Register(this);
 
@@ -96,19 +79,16 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
 
     private void OnOpenThemeFolder()
     {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = GetThemesDirectoryPath(),
-            UseShellExecute = true
-        });
+        ThemeManager.OpenThemeDirectory();
     }
 
     private async Task LoadThemes()
     {
+        await Task.Delay(100);
         Themes.Clear();
         try
         {
-            await foreach (Theme theme in GetThemes())
+            await foreach (Theme theme in ThemeManager.GetThemes())
             {
                 Themes.Add(theme);
             }
@@ -119,6 +99,8 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             ShowError("Error loading theme file", e.ToString());
         }
     }
+
+
 
     private async Task LoadThemeBrushes(Theme? value)
     {
@@ -132,7 +114,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             try
             {
                 List<ThemeCategory> categories = new();
-                await foreach (ThemeCategory category in GetCategories(value))
+                await foreach (ThemeCategory category in ThemeManager.GetCategories(value))
                 {
                     categories.Add(category);
                 }
@@ -172,116 +154,22 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         if (await DialogHost.Show(content, "Root") as bool? == true &&
             content.SelectedTheme is { } baseTheme)
         {
-            string filePath = content.Name;
-            foreach(var c in Path.GetInvalidFileNameChars())
-            {
-                filePath = filePath.Replace(c, '_');
-            }
-
-            filePath += ".jsonc";
-            filePath = Path.Combine(GetThemesDirectoryPath(), filePath);
-
-            //TODO: Make sure new name does not already exist.
-            //TODO: Make sure new does not math source.
+            Theme theme;
             try
             {
-                File.Copy(baseTheme.FilePath, filePath, true);
-                //The default files are marked as readonly. Need to clear the flag.
-                File.SetAttributes(filePath, FileAttributes.Normal);
+                theme = await ThemeManager.CreateTheme(content.Name, baseTheme);
             }
             catch(Exception e)
             {
-                ShowError("Error reating new theme file", e.ToString());
+                ShowError("Error creating new theme", e.ToString());
                 return;
             }
-
-            Theme theme = baseTheme with
-            {
-                FilePath = filePath,
-                Name = content.Name
-            };
-            await WriteTheme(theme, jsonObject =>
-            {
-                JsonNode meta = jsonObject["meta"] ??= new JsonObject();
-                meta["name"] = content.Name;
-            });
 
             Themes.Add(theme);
             SelectedTheme = theme;
 
         }
 
-    }
-
-    private async IAsyncEnumerable<ThemeCategory> GetCategories(Theme theme)
-    {
-        JsonSerializerOptions options = new()
-        {
-            ReadCommentHandling = JsonCommentHandling.Skip
-        };
-        using Stream fileStream = File.OpenRead(theme.FilePath);
-        var jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(fileStream, options);
-
-        if (jsonObject?["themeValues"] is JsonObject themeValues)
-        {
-            foreach ((string name, JsonNode? child) in themeValues)
-            {
-                if (child is null) continue;
-                if (child is not JsonObject childObject) continue;
-
-                List<ThemeColor> colors = new();
-                foreach ((string colorName, JsonNode? colorNode) in childObject)
-                {
-                    string? value = colorNode?.GetValue<string>();
-                    colors.Add(CreateThemeFactory(colorName, value));
-                    //colors.Add(ThemeColorFactory.Create(colorName, value));
-                    //colors.Add(new ThemeColor(colorName, Messenger) { Value = value });
-                }
-
-                yield return new ThemeCategory(name, colors);
-            }
-        }
-
-    }
-
-    private static string GetThemesDirectoryPath()
-        => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".gitkraken", "themes");
-
-    private async IAsyncEnumerable<Theme> GetThemes()
-    {
-        string themeDirectory = GetThemesDirectoryPath();
-
-        foreach (string file in Directory.EnumerateFiles(themeDirectory))
-        {
-            if (Path.GetExtension(file).StartsWith(".jsonc", StringComparison.OrdinalIgnoreCase) &&
-                await ReadThemeAsync(file) is { } theme)
-            {
-                yield return theme;
-            }
-        }
-    }
-
-    private async Task<Theme?> ReadThemeAsync(string filePath)
-    {
-        JsonObject? jsonObject;
-        try
-        {
-            using Stream fileStream = File.OpenRead(filePath);
-            jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(fileStream, JsonReadOptions);
-        }
-        catch (Exception e)
-        {
-            ShowError("Error reading theme file", e.ToString());
-            return null;
-        }
-        if (jsonObject is not null &&
-            jsonObject["meta"] is JsonObject metadata &&
-            metadata["name"] is JsonValue nameValue &&
-            !string.IsNullOrWhiteSpace(nameValue.GetValue<string>()))
-        {
-            return new Theme(nameValue.GetValue<string>(), filePath);
-        }
-        return null;
     }
 
     async void IRecipient<BrushUpdated>.Receive(BrushUpdated message)
@@ -298,55 +186,11 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             UndoStack.Add(async () =>
             {
                 color.Value = previousValue;
-                await SaveCurrentAsTheme(selectedTheme);
+                await ThemeManager.SaveTheme(selectedTheme, ThemeCategories ?? Enumerable.Empty<ThemeCategory>());
             });
         }
 
-        await SaveCurrentAsTheme(selectedTheme);
-    }
-
-    private async Task SaveCurrentAsTheme(Theme theme)
-    {
-        await WriteTheme(theme, jsonObject =>
-        {
-            JsonObject themeValues = new();
-
-            foreach (ThemeCategory category in ThemeCategories ?? Enumerable.Empty<ThemeCategory>())
-            {
-                JsonObject jsonCategory = new();
-
-                foreach (ThemeColor color in category.Colors)
-                {
-                    jsonCategory[color.Name] = color.Value;
-                }
-
-                themeValues[category.Name] = jsonCategory;
-            }
-
-            jsonObject["themeValues"] = themeValues;
-        });
-    }
-
-    private async Task WriteTheme(Theme theme, Action<JsonObject> applyThemeChanges)
-    {
-        try
-        {
-            JsonObject? jsonObject;
-            using (Stream readStream = File.OpenRead(theme.FilePath))
-            {
-                jsonObject = await JsonSerializer.DeserializeAsync<JsonObject>(readStream, JsonReadOptions);
-            }
-            if (jsonObject is null) return;
-
-            applyThemeChanges(jsonObject);
-
-            using Stream writeStream = File.Open(theme.FilePath, FileMode.Create, FileAccess.Write, FileShare.Read);
-            await JsonSerializer.SerializeAsync(writeStream, jsonObject, JsonWriteOptions);
-        }
-        catch (Exception e)
-        {
-            ShowError($"Error writing theme file '{Path.GetFileName(theme.FilePath)}'", e.ToString());
-        }
+        await ThemeManager.SaveTheme(selectedTheme, ThemeCategories ?? Enumerable.Empty<ThemeCategory>());
     }
 
     private void ShowError(string message, string details)
@@ -361,15 +205,16 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
     private void OnDelete()
     {
         //TODO: prompt
+        //TODO: Move IsDefault check into manager
         if (SelectedTheme is { } selectedTheme && selectedTheme.IsDefault == false)
         {
             try
             {
-                File.Delete(selectedTheme.FilePath);
+                ThemeManager.DeleteTheme(selectedTheme);    
             }
             catch(Exception e)
             {
-                ShowError($"Error deleting {Path.GetFileName(selectedTheme.FilePath)}", e.ToString());
+                ShowError($"Error deleting {selectedTheme.Name}", e.ToString());
                 return;
             }
             SelectedTheme = null;
