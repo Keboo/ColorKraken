@@ -100,6 +100,8 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         }
     }
 
+
+
     private async Task LoadThemeBrushes(Theme? value)
     {
         if (value is null)

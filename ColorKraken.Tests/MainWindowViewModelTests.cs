@@ -1,153 +1,129 @@
-using System.Threading.Tasks;
-
-using Xunit;
-using ColorKraken;
-using Moq;
-using MaterialDesignThemes.Wpf;
-using Microsoft.Toolkit.Mvvm.Messaging;
-using System.ComponentModel;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System;
+using System.Threading.Tasks;
+
+using Microsoft.Toolkit.Mvvm.Messaging;
+
+using Moq;
 using Moq.AutoMock;
-using System.Diagnostics;
-using System.IO;
+using Moq.Language.Flow;
 
-namespace ColorKraken.Tests
+using Xunit;
+
+namespace ColorKraken.Tests;
+
+public class MainWindowViewModelTests
 {
-
-    public class MainWindowViewModelTests
+    [Fact]
+    public async Task OnRefresh_ClearAndAssignsSelectedTheme()
     {
-        [Fact]
-        public async Task OnRefresh_ClearAndAssignsSelectedTheme()
+        //Arrange
+        AutoMocker mocker = new();
+        Mock<IThemeManager> themeManager = mocker.GetMock<IThemeManager>();
+        themeManager.Setup(x => x.GetThemes())
+            .ReturnsAsyncEnumerable(new Theme("", ""));
+        MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+
+        vm.SelectedTheme = new Theme("test", "C:\\fakepath.jsonc");
+
+        List<Theme?> propertyValues = new();
+        vm.PropertyChanged += OnPropertyChanged;
+        void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            //Arrange
-            AutoMocker mocker = new();
-            MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
-            //new(messageQueue.Object, messenger.Object, (_, _)  => null!);
-
-            vm.SelectedTheme = new Theme("test", "C:\\fakepath.jsonc");
-
-            List<Theme?> propertyValues = new();
-            vm.PropertyChanged += OnPropertyChanged;
-            void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+            if (e.PropertyName == nameof(MainWindowViewModel.SelectedTheme))
             {
-                if (e.PropertyName == nameof(MainWindowViewModel.SelectedTheme))
-                {
-                    propertyValues.Add(vm.SelectedTheme);
-                }
+                propertyValues.Add(vm.SelectedTheme);
             }
-
-            //Act
-            await vm.OnRefresh();
-
-            //Assert
-            Assert.Equal(2, propertyValues.Count);
-            Assert.Null(propertyValues[0]);
-            Assert.NotNull(propertyValues[1]);
-            Assert.Contains(propertyValues[1], vm.Themes);
         }
 
-        [Fact]
-        public async Task RefreshCommand_OnExecute_LoadThemes()
-        {
-            //ViewModel.RefreshCommand.Execute(null);
-            //Arrange
-            AutoMocker mocker = new();
-            MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+        //Act
+        await vm.OnRefresh();
 
-            CancellationTokenSource cts = new();
-            TaskCompletionSource tcs = new();
-            vm.PropertyChanged += OnPropertyChanged;
-            void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        //Assert
+        Assert.Equal(2, propertyValues.Count);
+        Assert.Null(propertyValues[0]);
+        Assert.NotNull(propertyValues[1]);
+        Assert.Contains(propertyValues[1], vm.Themes);
+    }
+
+    [Fact]
+    public async Task RefreshCommand_OnExecute_LoadThemes()
+    {
+        //ViewModel.RefreshCommand.Execute(null);
+        //Arrange
+        AutoMocker mocker = new();
+        Mock<IThemeManager> themeManager = mocker.GetMock<IThemeManager>();
+        themeManager.Setup(x => x.GetThemes())
+            .ReturnsAsyncEnumerable(new Theme("", ""));
+
+        MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+
+        CancellationTokenSource cts = new();
+        TaskCompletionSource tcs = new();
+        vm.PropertyChanged += OnPropertyChanged;
+        void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MainWindowViewModel.SelectedTheme)
+                && vm.SelectedTheme is not null)
             {
-                if (e.PropertyName == nameof(MainWindowViewModel.SelectedTheme) 
-                    && vm.SelectedTheme is not null)
-                {
-                    tcs.TrySetResult();
-                }
+                tcs.TrySetResult();
             }
-
-            cts.CancelAfter(TimeSpan.FromSeconds(5));
-            cts.Token.Register(() => tcs.TrySetCanceled());
-
-            //Act
-            vm.RefreshCommand.Execute(null);
-            await tcs.Task;
-
-            //Assert
-            Assert.True(vm.Themes.Any());
-
         }
 
-        [Fact]
-        public void OpenThemeFolderCommand_StartsExplorerProcess()
-        {
-            //Arrange
-            AutoMocker mocker = new();
-            Mock<IProcessService> processServiceMock = mocker.GetMock<IProcessService>();
-            MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+        cts.CancelAfter(TimeSpan.FromSeconds(1));
+        cts.Token.Register(() => tcs.TrySetCanceled());
 
-            //Act
-            vm.OpenThemeFolderCommand.Execute(null);
+        //Act
+        vm.RefreshCommand.Execute(null);
+        await tcs.Task;
 
-            //Assert
-            processServiceMock.Verify(x => x.Start(
-                It.Is<ProcessStartInfo>(startInfo => startInfo.FileName.Contains(".gitkraken"))));
-        }
+        //Assert
+        Assert.True(vm.Themes.Any());
 
-        [Fact]
-        public async Task OnReceive_BrushUpdatedMessage_UpdateThemeFile()
-        {
-            //Arrange
-            AutoMocker mocker = new();
-            WeakReferenceMessenger messenger = new();
-            mocker.Use<IMessenger>(messenger);
-            mocker.Use<CreateTheme>((string name, string? initValue) =>
-                                new ThemeColor(name, messenger)
-                                {
-                                    Value = initValue
-                                });
+    }
 
-            MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+    [Fact]
+    public void OpenThemeFolderCommand_StartsExplorerProcess()
+    {
+        //Arrange
+        AutoMocker mocker = new();
+        Mock<IThemeManager> themeManagerMock = mocker.GetMock<IThemeManager>();
+        MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
 
-            string filePath = TestFileHelper.CreateTestFile();
-            Theme selectedTheme = new("Test Theme", filePath);
+        //Act
+        vm.OpenThemeFolderCommand.Execute(null);
 
-            var waiter = new TaskCompletionSource<ThemeColor>();
+        //Assert
+        themeManagerMock.Verify(x => x.OpenThemeDirectory());
+    }
 
-            vm.PropertyChanged += OnPropertyChanged;
-            void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-            {
-                if (e.PropertyName == nameof(MainWindowViewModel.ThemeCategories) &&
-                    vm.SelectedTheme is not null)
-                {
-                    var color = vm.ThemeCategories!.First().Colors.First();
-                    waiter.TrySetResult(color);
-                }
-            }
+    [Fact]
+    public void OnReceive_BrushUpdatedMessage_UpdatesTheme()
+    {
+        //Arrange
+        AutoMocker mocker = new();
+        WeakReferenceMessenger messenger = new();
+        mocker.Use<IMessenger>(messenger);
 
-            vm.SelectedTheme = selectedTheme;
+        string filePath = TestFileHelper.CreateTestFile();
+        Theme selectedTheme = new("Test Theme", filePath);
 
-            ThemeColor themeColor = await waiter.Task;
-            string? previousValue = themeColor.Value;
-            themeColor.Value += "new";
+        Mock<IThemeManager> themeManager = mocker.GetMock<IThemeManager>();
+        themeManager.Setup(x => x.SaveTheme(selectedTheme, It.IsAny<IEnumerable<ThemeCategory>>()));
+        MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
 
-            var message = new BrushUpdated(themeColor, previousValue);
+        vm.SelectedTheme = selectedTheme;
+        var color = new ThemeColor("Testcolor", messenger) { Value = "new" };
+        var message = new BrushUpdated(color, "old" );
 
-            //Act
-            messenger.Send(message);
+        //Act
+        messenger.Send(message);
 
-            //Assert
-            //Force reload of theme
-            vm.SelectedTheme = null;
-            waiter = new TaskCompletionSource<ThemeColor>();
-            vm.SelectedTheme = selectedTheme;
-            ThemeColor updatedColor = await waiter.Task;
-
-            Assert.Equal(themeColor.Name, updatedColor.Name);
-            Assert.Equal(themeColor.Value, updatedColor.Value);
-        }
+        //Assert
+        themeManager.VerifyAll();
     }
 }
