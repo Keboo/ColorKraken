@@ -149,24 +149,5 @@ namespace ColorKraken.Tests
             Assert.Equal(themeColor.Name, updatedColor.Name);
             Assert.Equal(themeColor.Value, updatedColor.Value);
         }
-
-        
-
-        [Fact]
-        public async Task Foo()
-        {
-            int t1 = Thread.CurrentThread.ManagedThreadId;
-
-            //await Task.Yield();
-            //await Task.Delay(1);
-            //IOnly meaningful if the caller is the UI thread (has a synchonization context)
-            //await Task.Run(() => { }).ConfigureAwait(true);
-            await Task.CompletedTask;
-
-
-            int t2 = Thread.CurrentThread.ManagedThreadId;
-
-            Assert.Equal(t1, t2);
-        }
     }
 }
