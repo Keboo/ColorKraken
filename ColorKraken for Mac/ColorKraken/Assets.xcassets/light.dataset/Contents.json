@@ -1,0 +1,13 @@
+{
+  "data" : [
+    {
+      "filename" : "light.jsonc-default",
+      "idiom" : "mac",
+      "universal-type-identifier" : "json"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
