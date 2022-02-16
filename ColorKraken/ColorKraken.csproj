@@ -8,6 +8,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <Version>1.0.0</Version>
     <StartupObject>ColorKraken.App</StartupObject>
+    <UserSecretsId>2cecaeda-d0ac-452e-8a56-cbd0b940688b</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,10 +21,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+    <None Update="*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.22" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+  </ItemGroup>
 </Project>

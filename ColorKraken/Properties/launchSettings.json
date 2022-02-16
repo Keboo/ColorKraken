@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ColorKraken": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Settings__Value": "FromENV"
+      }
+    }
+  }
+}
