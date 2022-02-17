@@ -22,6 +22,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         configureTable()
         // Do any additional setup after loading the view.
+        ThemeBuilder()
     }
     
     override var representedObject: Any? {
