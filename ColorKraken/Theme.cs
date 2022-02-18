@@ -47,8 +47,8 @@ public record class ThemeColor(string Name, IMessenger Messenger) : INotifyPrope
             if (_value != value)
             {
                 _value = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-                Messenger.Send(new BrushUpdated(this, previousValue));
+                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
+                //Messenger.Send(new BrushUpdated(this, previousValue));
             }
         }
     }

@@ -56,7 +56,7 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3" Margin="0,15,0,0">
                     <Button Content="_OK" IsDefault="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                  Margin="0,0,10,0">
+                            Margin="0,0,10,0">
                         <Button.CommandParameter>
                             <system:Boolean>True</system:Boolean>
                         </Button.CommandParameter>
@@ -96,20 +96,22 @@
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal">
             <Button Content="{materialDesign:PackIcon Kind=FolderOpen}" 
-                  Command="{Binding OpenThemeFolderCommand}"
-                  ToolTip="Open theme folder"/>
+                    Command="{Binding OpenThemeFolderCommand}"
+                    ToolTip="Open theme folder"/>
 
             <ComboBox ItemsSource="{Binding Themes}"
-                    SelectedItem="{Binding SelectedTheme}"
-                    MinWidth="200" Margin="10,3">
+                      SelectedItem="{Binding SelectedTheme}"
+                      MinWidth="200" Margin="10,3">
               <ComboBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:Theme}">
                   <TextBlock Text="{Binding Name}" />
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <Button Content="_New" Command="{Binding NewThemeCommand}" 
-                VerticalAlignment="Center" />
+            <Button Content="_New" 
+                    VerticalAlignment="Center" />
+            <Button Content="Red to Blue" 
+                    VerticalAlignment="Center" Click="Button_Click" />
           </StackPanel>
           <StackPanel Orientation="Horizontal" Grid.Column="1">
             <Button Content="{materialDesign:PackIcon Kind=Delete}" Command="{Binding DeleteCommand}" 
