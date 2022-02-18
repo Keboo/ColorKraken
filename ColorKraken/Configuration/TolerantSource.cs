@@ -6,38 +6,24 @@ using Microsoft.Extensions.Primitives;
 
 namespace ColorKraken.Configuration;
 
-public class TollerantSource : IConfigurationSource
+public class TolerantSource : IConfigurationSource
 {
     public IConfigurationSource InternalSource { get; }
-    public TollerantSource(IConfigurationSource internalSource)
+    public TolerantSource(IConfigurationSource internalSource)
     {
         InternalSource = internalSource;
     }
 
     public IConfigurationProvider Build(IConfigurationBuilder builder)
     {
-        return new TollerantProvider(InternalSource.Build(builder));
+        return new TolerantProvider(InternalSource.Build(builder));
     }
 
-    private class EmptyChangeToken : IChangeToken
-    {
-        public static IChangeToken Instance { get; } = new EmptyChangeToken();
-
-        public bool HasChanged => false;
-
-        public bool ActiveChangeCallbacks => false;
-
-        public IDisposable? RegisterChangeCallback(Action<object> callback, object state)
-        {
-            return null;
-        }
-    }
-
-    private class TollerantProvider : IConfigurationProvider
+    private class TolerantProvider : IConfigurationProvider
     {
         private IConfigurationProvider ConfigurationProvider { get; }
 
-        public TollerantProvider(IConfigurationProvider internalProvider)
+        public TolerantProvider(IConfigurationProvider internalProvider)
         {
             ConfigurationProvider = internalProvider;
         }
@@ -98,6 +84,20 @@ public class TollerantSource : IConfigurationSource
             {
                 return Array.Empty<string>();
             }
+        }
+    }
+
+    private class EmptyChangeToken : IChangeToken
+    {
+        public static IChangeToken Instance { get; } = new EmptyChangeToken();
+
+        public bool HasChanged => false;
+
+        public bool ActiveChangeCallbacks => false;
+
+        public IDisposable? RegisterChangeCallback(Action<object> callback, object state)
+        {
+            return null;
         }
     }
 }
