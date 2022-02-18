@@ -454,3 +454,5 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 
 ColorKraken for Mac/ColorKraken.xcodeproj/project.xcworkspace/xcuserdata/brucegomes.xcuserdatad/UserInterfaceState.xcuserstate
+
+*.xcuserstate
