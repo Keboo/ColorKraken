@@ -21,7 +21,7 @@ class FileThemeBuilder {
         return fileData
     }
     
-    func GetThemeFileUrl() -> URL? {
+    private func GetThemeFileUrl() -> URL? {
         
         let fileManager = FileManager.default
         var filePath = fileManager.homeDirectoryForCurrentUser
