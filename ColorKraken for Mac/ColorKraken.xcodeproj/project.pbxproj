@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9B8664CB27BBA3D30089D5A7 /* ThemeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8664CA27BBA3D30089D5A7 /* ThemeBuilder.swift */; };
+		9BD0EB1D27C0E09000B5117C /* FileThemeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD0EB1C27C0E09000B5117C /* FileThemeBuilder.swift */; };
 		9BD4A44A27AFCCC90084C169 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD4A44927AFCCC90084C169 /* AppDelegate.swift */; };
 		9BD4A44C27AFCCC90084C169 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD4A44B27AFCCC90084C169 /* ViewController.swift */; };
 		9BD4A44E27AFCCCB0084C169 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BD4A44D27AFCCCB0084C169 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		9B8664CA27BBA3D30089D5A7 /* ThemeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBuilder.swift; sourceTree = "<group>"; };
+		9BD0EB1C27C0E09000B5117C /* FileThemeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileThemeBuilder.swift; sourceTree = "<group>"; };
 		9BD4A44627AFCCC90084C169 /* ColorKraken.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorKraken.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BD4A44927AFCCC90084C169 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9BD4A44B27AFCCC90084C169 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				9BD4A44F27AFCCCB0084C169 /* Main.storyboard */,
 				9BD4A45227AFCCCB0084C169 /* ColorKraken.entitlements */,
 				9B8664CA27BBA3D30089D5A7 /* ThemeBuilder.swift */,
+				9BD0EB1C27C0E09000B5117C /* FileThemeBuilder.swift */,
 			);
 			path = ColorKraken;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 				9BD4A44C27AFCCC90084C169 /* ViewController.swift in Sources */,
 				9B8664CB27BBA3D30089D5A7 /* ThemeBuilder.swift in Sources */,
 				9BD4A44A27AFCCC90084C169 /* AppDelegate.swift in Sources */,
+				9BD0EB1D27C0E09000B5117C /* FileThemeBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
