@@ -9,19 +9,30 @@ import Foundation
 import AppKit
 
 class FileThemeBuilder {
+    
+    func GetFileData() -> NSDictionary? {
         
-    func GetFileData() -> Data? {
-        
-        var fileData : Data? = nil
+        var fileData : NSDictionary? = nil
         
         if let fileURL = GetThemeFileUrl() {
-            fileData = try? Data(contentsOf: fileURL, options: .mappedIfSafe)
+            
+            let dataStr = try? String(contentsOf: fileURL)
+            
+            do {
+                fileData = try JSONSerialization.jsonObject(with: (dataStr!.data(using: .utf8))!, options: [.json5Allowed, .fragmentsAllowed]) as? NSDictionary
+                
+                print("valid")
+            } catch {
+                print(error)
+            }
+        } else {
+            print("Invalid File Url")
         }
         
         return fileData
     }
     
-    private func GetThemeFileUrl() -> URL? {
+    func GetThemeFileUrl() -> URL? {
         
         let fileManager = FileManager.default
         var filePath = fileManager.homeDirectoryForCurrentUser

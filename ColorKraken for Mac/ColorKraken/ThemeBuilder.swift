@@ -10,41 +10,40 @@ import AppKit
 
 class ThemeBuilder {
     
+    let metaKey = "meta"
+    let themeKey = "themeValues"
+    let toolbarKey = "toolbar"
+    let rootKey = "root"
+    let tabsbarKey = "tabsbar"
+    
+    var metaDict : NSDictionary? = nil
+    var toolbarDict : NSDictionary? = nil
+    var rootDict : NSDictionary? = nil
+    var tabsbarDict : NSDictionary? = nil
+    
     init() {
-        if let data = FileThemeBuilder().GetFileData() {
-            let themeDict = try? JSONDecoder().decode(Theme.self, from: data)
-            print(themeDict!)
+        
+        if let dictData = FileThemeBuilder().GetFileData() {
+            BuildThemeDict(dictData: dictData)
+        } else {
+            print("Failed Getting Dictionary from Json")
+        }
+    }
+    
+    private func BuildThemeDict(dictData : NSDictionary) {
+        
+        metaDict = dictData.object(forKey: metaKey) as? NSDictionary
+        
+        if let themeValuesDict = dictData.object(forKey: themeKey) as? NSDictionary {
+            
+            toolbarDict = themeValuesDict.object(forKey: toolbarKey) as? NSDictionary
+            rootDict = themeValuesDict.object(forKey: rootKey) as? NSDictionary
+            tabsbarDict = themeValuesDict.object(forKey: tabsbarKey) as? NSDictionary
+        } else {
+            print("Failed Getting Theme components from dictionary")
         }
     }
 }
 
-private struct Theme : Codable {
-    var meta : Meta
-    var themeValues : ThemeValues
-    
-    struct Meta: Codable {
-        var name : String
-        var scheme : String
-    }
-    
-    struct ThemeValues: Codable {
-        
-        var root : root
-        var toolbar : toolbar
-        var tabsbar : tabsbar
-        
-        struct root : Codable {
-            var rootValues : [String:String]
-        }
-        
-        struct toolbar : Codable {
-            var toolbarValues : [String:String]
-        }
-        
-        struct tabsbar : Codable {
-            var tabsbarValues : [String:String]
-        }
-    }
-}
 
 
