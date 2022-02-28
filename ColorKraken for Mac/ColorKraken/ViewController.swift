@@ -10,6 +10,8 @@ import Cocoa
 class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
     
     @IBOutlet weak var tableView: NSTableView!
+    var themeBuilder : ThemeBuilder? = nil
+    
     
     fileprivate enum CellIdentifiers {
         static let ColorNameCell = "colorNameCellID"
@@ -22,7 +24,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
         
         configureTable()
         // Do any additional setup after loading the view.
-        ThemeBuilder()
+        self.themeBuilder = ThemeBuilder()
     }
     
     override var representedObject: Any? {
@@ -44,12 +46,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSour
     func numberOfRows(in tableView: NSTableView) -> Int {
         
         // number of lines in json file
-        return 10;
+        return self.themeBuilder?.GetTotalElements() ?? 0
     }
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         40
-    }
+    }     
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         

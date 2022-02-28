@@ -40,8 +40,21 @@ class ThemeBuilder {
             rootDict = themeValuesDict.object(forKey: rootKey) as? NSDictionary
             tabsbarDict = themeValuesDict.object(forKey: tabsbarKey) as? NSDictionary
         } else {
-            print("Failed Getting Theme components from dictionary")
+            print("Failed Getting Themecomponents from dictioary")
         }
+    }
+    
+    func GetTotalElements() -> Int {
+        
+        var total = 0
+        
+        for dict in [self.toolbarDict, self.tabsbarDict, self.rootDict] {
+            if dict != nil {
+                total = dict!.count
+            }
+        }
+        
+        return total
     }
 }
 
