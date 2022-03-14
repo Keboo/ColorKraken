@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B83B43B27DF1F3000A8E033 /* FileThemeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B83B43A27DF1F3000A8E033 /* FileThemeBuilder.swift */; };
+		9B83B43D27DF1FD600A8E033 /* ThemeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B83B43C27DF1FD600A8E033 /* ThemeBuilder.swift */; };
 		C0855EB322A10BC20063CEF3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0855EB222A10BC20063CEF3 /* AppDelegate.swift */; };
 		C0855EB522A10BC20063CEF3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0855EB422A10BC20063CEF3 /* ViewController.swift */; };
 		C0855EB722A10BC30063CEF3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0855EB622A10BC30063CEF3 /* Assets.xcassets */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9B83B43A27DF1F3000A8E033 /* FileThemeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileThemeBuilder.swift; sourceTree = "<group>"; };
+		9B83B43C27DF1FD600A8E033 /* ThemeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBuilder.swift; sourceTree = "<group>"; };
 		C0855EAF22A10BC20063CEF3 /* OutlineViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutlineViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0855EB222A10BC20063CEF3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0855EB422A10BC20063CEF3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -70,6 +74,8 @@
 				C0855EB822A10BC30063CEF3 /* Main.storyboard */,
 				C0855EBB22A10BC30063CEF3 /* Info.plist */,
 				C0855EBC22A10BC30063CEF3 /* OutlineViewDemo.entitlements */,
+				9B83B43A27DF1F3000A8E033 /* FileThemeBuilder.swift */,
+				9B83B43C27DF1FD600A8E033 /* ThemeBuilder.swift */,
 			);
 			path = OutlineViewDemo;
 			sourceTree = "<group>";
@@ -155,10 +161,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0855ECB22A10BE30063CEF3 /* ViewModel.swift in Sources */,
+				9B83B43D27DF1FD600A8E033 /* ThemeBuilder.swift in Sources */,
 				C0855EC622A10BD80063CEF3 /* ColorDetailsView.swift in Sources */,
 				C0855ECC22A10BE30063CEF3 /* Model.swift in Sources */,
 				C0855EB522A10BC20063CEF3 /* ViewController.swift in Sources */,
 				C0855EB322A10BC20063CEF3 /* AppDelegate.swift in Sources */,
+				9B83B43B27DF1F3000A8E033 /* FileThemeBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +313,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.appcoda.OutlineViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -325,6 +334,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.appcoda.OutlineViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

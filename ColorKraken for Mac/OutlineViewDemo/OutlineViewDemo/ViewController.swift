@@ -17,7 +17,7 @@ class ViewController: NSViewController {
     
     
     // MARK: - Properties
-    
+    var themeBuilder : ThemeBuilder? = nil
     var viewModel = ViewModel()
     
     lazy var colorDetailsView: ColorDetailsView = {
@@ -42,6 +42,8 @@ class ViewController: NSViewController {
         // Do any additional setup after loading the view.
         outlineView.dataSource = self
         outlineView.delegate = self
+        
+        self.themeBuilder = ThemeBuilder()
     }
     
     override var representedObject: Any? {
