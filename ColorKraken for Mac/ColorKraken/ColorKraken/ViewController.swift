@@ -43,7 +43,7 @@ class ViewController: NSViewController {
         outlineView.dataSource = self
         outlineView.delegate = self
         
-        self.themeBuilder = ThemeBuilder()
+        //self.themeBuilder = ThemeBuilder()
     }
     
     override var representedObject: Any? {
