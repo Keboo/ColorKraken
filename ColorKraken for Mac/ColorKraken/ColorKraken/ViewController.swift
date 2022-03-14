@@ -44,22 +44,29 @@ class ViewController: NSViewController {
         outlineView.delegate = self
         
         self.themeBuilder = ThemeBuilder()
-        loadToolbarDict()
+        loadDict(withTitle: "Root Itens",dict: self.themeBuilder?.rootDict)
+        loadDict(withTitle: "ToolBar Itens",dict: self.themeBuilder?.toolbarDict)
+        loadDict(withTitle: "Tabsbar Itens", dict: self.themeBuilder?.tabsbarDict)
     }
     
-    func loadToolbarDict() {
+    func loadDict(withTitle title: String, dict: NSDictionary?) {
         
-        let collection = viewModel.createCollection(withTitle: "ToolBar Itens", inCollection: nil)
-        
-        loadDictItems(inCollection: collection)
-        
-        outlineView.reloadData()
-        outlineView.expandItem(collection)
+        if let dictionary = dict {
+            
+            let collection = viewModel.createCollection(withTitle: title, inCollection: nil)
+            
+            loadDictItems(inCollection: collection, fromDict: dictionary)
+            
+            outlineView.reloadData()
+            outlineView.expandItem(collection)
+        } else {
+            print("couldn't load dictionary from themeBuilder property")
+        }
     }
     
-    func loadDictItems(inCollection collection: Collection) {
+    func loadDictItems(inCollection collection: Collection, fromDict dict: NSDictionary) {
         
-        for (key,val) in self.themeBuilder!.toolbarDict! {
+        for (key,val) in dict {
             
             let color = viewModel.addColor(to: collection)
             color.keyName = key as! String
