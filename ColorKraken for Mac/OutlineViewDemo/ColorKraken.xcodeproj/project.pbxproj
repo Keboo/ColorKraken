@@ -22,13 +22,13 @@
 /* Begin PBXFileReference section */
 		9B83B43A27DF1F3000A8E033 /* FileThemeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileThemeBuilder.swift; sourceTree = "<group>"; };
 		9B83B43C27DF1FD600A8E033 /* ThemeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBuilder.swift; sourceTree = "<group>"; };
-		C0855EAF22A10BC20063CEF3 /* OutlineViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OutlineViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0855EAF22A10BC20063CEF3 /* ColorKraken.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorKraken.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0855EB222A10BC20063CEF3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0855EB422A10BC20063CEF3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C0855EB622A10BC30063CEF3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C0855EB922A10BC30063CEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C0855EBB22A10BC30063CEF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C0855EBC22A10BC30063CEF3 /* OutlineViewDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OutlineViewDemo.entitlements; sourceTree = "<group>"; };
+		C0855EBC22A10BC30063CEF3 /* ColorKraken.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ColorKraken.entitlements; sourceTree = "<group>"; };
 		C0855EC322A10BD70063CEF3 /* ColorDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorDetailsView.swift; sourceTree = "<group>"; };
 		C0855EC422A10BD70063CEF3 /* ColorDetailsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorDetailsView.xib; sourceTree = "<group>"; };
 		C0855EC922A10BE20063CEF3 /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
@@ -49,7 +49,7 @@
 		C0855EA622A10BC20063CEF3 = {
 			isa = PBXGroup;
 			children = (
-				C0855EB122A10BC20063CEF3 /* OutlineViewDemo */,
+				C0855EB122A10BC20063CEF3 /* ColorKraken */,
 				C0855EB022A10BC20063CEF3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -57,12 +57,12 @@
 		C0855EB022A10BC20063CEF3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C0855EAF22A10BC20063CEF3 /* OutlineViewDemo.app */,
+				C0855EAF22A10BC20063CEF3 /* ColorKraken.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C0855EB122A10BC20063CEF3 /* OutlineViewDemo */ = {
+		C0855EB122A10BC20063CEF3 /* ColorKraken */ = {
 			isa = PBXGroup;
 			children = (
 				C0855ECA22A10BE20063CEF3 /* Model.swift */,
@@ -73,11 +73,11 @@
 				C0855EB622A10BC30063CEF3 /* Assets.xcassets */,
 				C0855EB822A10BC30063CEF3 /* Main.storyboard */,
 				C0855EBB22A10BC30063CEF3 /* Info.plist */,
-				C0855EBC22A10BC30063CEF3 /* OutlineViewDemo.entitlements */,
+				C0855EBC22A10BC30063CEF3 /* ColorKraken.entitlements */,
 				9B83B43A27DF1F3000A8E033 /* FileThemeBuilder.swift */,
 				9B83B43C27DF1FD600A8E033 /* ThemeBuilder.swift */,
 			);
-			path = OutlineViewDemo;
+			path = ColorKraken;
 			sourceTree = "<group>";
 		};
 		C0855EC222A10BC90063CEF3 /* Color Detals View */ = {
@@ -92,9 +92,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C0855EAE22A10BC20063CEF3 /* OutlineViewDemo */ = {
+		C0855EAE22A10BC20063CEF3 /* ColorKraken */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C0855EBF22A10BC30063CEF3 /* Build configuration list for PBXNativeTarget "OutlineViewDemo" */;
+			buildConfigurationList = C0855EBF22A10BC30063CEF3 /* Build configuration list for PBXNativeTarget "ColorKraken" */;
 			buildPhases = (
 				C0855EAB22A10BC20063CEF3 /* Sources */,
 				C0855EAC22A10BC20063CEF3 /* Frameworks */,
@@ -104,9 +104,9 @@
 			);
 			dependencies = (
 			);
-			name = OutlineViewDemo;
+			name = ColorKraken;
 			productName = OutlineViewDemo;
-			productReference = C0855EAF22A10BC20063CEF3 /* OutlineViewDemo.app */;
+			productReference = C0855EAF22A10BC20063CEF3 /* ColorKraken.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -124,7 +124,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C0855EAA22A10BC20063CEF3 /* Build configuration list for PBXProject "OutlineViewDemo" */;
+			buildConfigurationList = C0855EAA22A10BC20063CEF3 /* Build configuration list for PBXProject "ColorKraken" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -137,7 +137,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C0855EAE22A10BC20063CEF3 /* OutlineViewDemo */,
+				C0855EAE22A10BC20063CEF3 /* ColorKraken */,
 			);
 		};
 /* End PBXProject section */
@@ -344,7 +344,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C0855EAA22A10BC20063CEF3 /* Build configuration list for PBXProject "OutlineViewDemo" */ = {
+		C0855EAA22A10BC20063CEF3 /* Build configuration list for PBXProject "ColorKraken" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C0855EBD22A10BC30063CEF3 /* Debug */,
@@ -353,7 +353,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C0855EBF22A10BC30063CEF3 /* Build configuration list for PBXNativeTarget "OutlineViewDemo" */ = {
+		C0855EBF22A10BC30063CEF3 /* Build configuration list for PBXNativeTarget "ColorKraken" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C0855EC022A10BC30063CEF3 /* Debug */,
