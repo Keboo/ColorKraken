@@ -29,11 +29,14 @@ class ViewModel {
      collection. Otherwise append it to the collections array of the `model`
      property as a top level collection.
     */
-    func createCollection(withTitle title: String, inCollection collection: Collection?) {
+    func createCollection(withTitle title: String, inCollection collection: Collection?) -> Collection {
         if let collection = collection {
             collection.items.append(Collection(withTitle: title, id: model.getCollectionID()))
+            return collection
         } else {
-            model.collections.append(Collection(withTitle: title, id: model.getCollectionID()))
+            let collection = Collection(withTitle: title, id: model.getCollectionID())
+            model.collections.append(collection)
+            return collection
         }
     }
     

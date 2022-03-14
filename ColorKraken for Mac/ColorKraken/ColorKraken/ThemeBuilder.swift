@@ -25,6 +25,7 @@ class ThemeBuilder {
         
         if let dictData = FileThemeBuilder().GetFileData() {
             BuildThemeDict(dictData: dictData)
+            print("all 3 dictionaries built succesfully")
         } else {
             print("Failed Getting Dictionary from Json")
         }

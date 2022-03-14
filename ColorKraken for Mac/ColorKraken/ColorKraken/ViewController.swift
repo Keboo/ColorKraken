@@ -44,6 +44,27 @@ class ViewController: NSViewController {
         outlineView.delegate = self
         
         self.themeBuilder = ThemeBuilder()
+        loadToolbarDict()
+    }
+    
+    func loadToolbarDict() {
+        
+        let collection = viewModel.createCollection(withTitle: "ToolBar Itens", inCollection: nil)
+        
+        loadDictItems(inCollection: collection)
+        
+        outlineView.reloadData()
+        outlineView.expandItem(collection)
+    }
+    
+    func loadDictItems(inCollection collection: Collection) {
+        
+        for (key,val) in self.themeBuilder!.toolbarDict! {
+            
+            let color = viewModel.addColor(to: collection)
+            color.keyName = key as! String
+            color.valueName = val as! String
+        }
     }
     
     override var representedObject: Any? {
@@ -59,10 +80,10 @@ class ViewController: NSViewController {
         var collectionToExpand: Collection?
         
         if let collection = getCollectionForSelectedItem() {
-            viewModel.createCollection(withTitle: "New Collection", inCollection: collection)
+            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: collection)
             collectionToExpand = collection
         } else {
-            viewModel.createCollection(withTitle: "New Collection", inCollection: nil)
+            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: nil)
         }
         
         outlineView.reloadData()
@@ -201,10 +222,10 @@ extension ViewController: NSOutlineViewDelegate {
                 cell.textField?.layer?.backgroundColor = .clear
             } else if let color = item as? Color {
                 
-                cell.textField?.stringValue = ""
+                cell.textField?.stringValue = color.keyName
                 cell.textField?.isEditable = false
                 cell.textField?.wantsLayer = true
-                cell.textField?.layer?.backgroundColor = color.toNSColor().cgColor
+                cell.textField?.layer?.backgroundColor = .clear//color.toNSColor().cgColor
                 cell.textField?.layer?.cornerRadius = 5.0
             }
             return cell
@@ -217,7 +238,7 @@ extension ViewController: NSOutlineViewDelegate {
                 cell.textField?.stringValue = collection.totalItems != 1 ? "\(collection.totalItems) items" : "1 item"
                 cell.textField?.font = NSFont.boldSystemFont(ofSize: cell.textField?.font?.pointSize ?? 13.0)
             } else if let color = item as? Color {
-                cell.textField?.stringValue = color.description
+                cell.textField?.stringValue = color.valueName//color.description
                 cell.textField?.font = NSFont.systemFont(ofSize: cell.textField?.font?.pointSize ?? 13.0)
             }
             return cell

@@ -30,6 +30,8 @@ class Color: Equatable, CustomStringConvertible {
     var green: CGFloat = 0.0
     var blue: CGFloat = 0.0
     var alpha: CGFloat = 1.0
+    var keyName : String = ""
+    var valueName : String = ""
     
     /// It returns the RGBA values formatted as they should be
     /// displayed to the outline view.
@@ -39,7 +41,7 @@ class Color: Equatable, CustomStringConvertible {
     
     
     init(withID id: Int) {
-        self.id = id
+        self.id = id        
     }
     
     
