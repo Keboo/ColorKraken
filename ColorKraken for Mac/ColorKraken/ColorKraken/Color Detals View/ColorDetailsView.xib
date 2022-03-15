@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ColorDetailsView" customModule="OutlineViewDemo" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="ColorDetailsView" customModule="ColorKraken" customModuleProvider="target">
             <connections>
                 <outlet property="alphaLabel" destination="ibC-KY-3w3" id="tto-r5-wWu"/>
                 <outlet property="blueLabel" destination="yoj-1V-FtZ" id="whq-2E-g2Y"/>
