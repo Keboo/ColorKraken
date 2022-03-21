@@ -25,7 +25,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="65" id="c1D-tS-UA5"/>
                     </constraints>
-                    <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="color" name="systemRedColor" catalog="System" colorSpace="catalog"/>
                     <connections>
                         <action selector="showColorsPanel:" target="-2" id="lYb-GR-G8V"/>
                     </connections>

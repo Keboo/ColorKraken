@@ -49,7 +49,8 @@ class ViewController: NSViewController {
         loadDict(withTitle: "Tabsbar Itens", dict: self.themeBuilder?.tabsbarDict)
     }
     
-    func loadDict(withTitle title: String, dict: NSDictionary?) {
+    // MARK: - Dictionary/File manipulation
+    func loadDict(withTitle title: String, dict: Dictionary<String, String>?) {
         
         if let dictionary = dict {
             
@@ -64,13 +65,13 @@ class ViewController: NSViewController {
         }
     }
     
-    func loadDictItems(inCollection collection: Collection, fromDict dict: NSDictionary) {
+    func loadDictItems(inCollection collection: Collection, fromDict dict: Dictionary<String, String>) {
         
         for (key,val) in dict {
             
             let color = viewModel.addColor(to: collection)
-            color.keyName = key as! String
-            color.valueName = val as! String
+            color.keyName = key
+            color.valueName = val
         }
     }
     
@@ -111,33 +112,35 @@ class ViewController: NSViewController {
     
     
     @IBAction func removeItem(_ sender: Any) {
-        let selectedRow = outlineView.selectedRow
-        var result = false
+        //        let selectedRow = outlineView.selectedRow
+        //        var result = false
+        //
+        //        if let selectedItem = outlineView.item(atRow: outlineView.selectedRow) as? Color, let parentCollection = getCollectionForSelectedItem() {
+        //            viewModel.remove(item: selectedItem, from: parentCollection)
+        //            result = true
+        //        } else if let selectedItem = outlineView.item(atRow: outlineView.selectedRow) as? Collection {
+        //            if let parentCollection = outlineView.parent(forItem: selectedItem) as? Collection {
+        //                viewModel.remove(item: selectedItem, from: parentCollection)
+        //            } else {
+        //                viewModel.remove(item: selectedItem, from: nil)
+        //            }
+        //
+        //            result = true
+        //        }
+        //
+        //        if result {
+        //            outlineView.reloadData()
+        //
+        //            if selectedRow < outlineView.numberOfRows {
+        //                outlineView.selectRowIndexes(IndexSet(arrayLiteral: selectedRow), byExtendingSelection: false)
+        //            } else {
+        //                if selectedRow - 1 > -1 {
+        //                    outlineView.selectRowIndexes(IndexSet(arrayLiteral: selectedRow - 1), byExtendingSelection: false)
+        //                }
+        //            }
+        //        }
         
-        if let selectedItem = outlineView.item(atRow: outlineView.selectedRow) as? Color, let parentCollection = getCollectionForSelectedItem() {
-            viewModel.remove(item: selectedItem, from: parentCollection)
-            result = true
-        } else if let selectedItem = outlineView.item(atRow: outlineView.selectedRow) as? Collection {
-            if let parentCollection = outlineView.parent(forItem: selectedItem) as? Collection {
-                viewModel.remove(item: selectedItem, from: parentCollection)
-            } else {
-                viewModel.remove(item: selectedItem, from: nil)
-            }
-            
-            result = true
-        }
-        
-        if result {
-            outlineView.reloadData()
-            
-            if selectedRow < outlineView.numberOfRows {
-                outlineView.selectRowIndexes(IndexSet(arrayLiteral: selectedRow), byExtendingSelection: false)
-            } else {
-                if selectedRow - 1 > -1 {
-                    outlineView.selectRowIndexes(IndexSet(arrayLiteral: selectedRow - 1), byExtendingSelection: false)
-                }
-            }
-        }
+        self.themeBuilder?.saveCurrentDict()
     }
     
     func getCollectionForSelectedItem() -> Collection? {

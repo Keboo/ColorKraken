@@ -10,16 +10,16 @@ import AppKit
 
 class FileThemeBuilder {
     
-    func GetFileData() -> NSDictionary? {
+    func GetFileData() -> Dictionary<String, Any>? {
         
-        var fileData : NSDictionary? = nil
+        var fileData : Dictionary<String, Any>? = nil
         
         if let fileURL = GetThemeFileUrl() {
             
             let dataStr = try? String(contentsOf: fileURL)
             
             do {
-                fileData = try JSONSerialization.jsonObject(with: (dataStr!.data(using: .utf8))!, options:  [.json5Allowed, .fragmentsAllowed]) as? NSDictionary 
+                fileData = try JSONSerialization.jsonObject(with: (dataStr!.data(using: .utf8))!, options:  [.json5Allowed, .fragmentsAllowed]) as? Dictionary<String, Any>
                 
                 print("valid")
             } catch {

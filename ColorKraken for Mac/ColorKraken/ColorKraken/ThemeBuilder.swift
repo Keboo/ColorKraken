@@ -16,14 +16,17 @@ class ThemeBuilder {
     let rootKey = "root"
     let tabsbarKey = "tabsbar"
     
-    var metaDict : NSDictionary? = nil
-    var toolbarDict : NSDictionary? = nil
-    var rootDict : NSDictionary? = nil
-    var tabsbarDict : NSDictionary? = nil
+    var dictData : Dictionary<String, Any>? = nil
+    var metaDict : Dictionary<String, String>? = nil
+    var themeValuesDict : Dictionary<String, Any>? = nil
+    var toolbarDict : Dictionary<String, String>? = nil
+    var rootDict : Dictionary<String, String>? = nil
+    var tabsbarDict : Dictionary<String, String>? = nil
     
     init() {
         
         if let dictData = FileThemeBuilder().GetFileData() {
+            
             BuildThemeDict(dictData: dictData)
             print("all 3 dictionaries built succesfully")
         } else {
@@ -31,15 +34,18 @@ class ThemeBuilder {
         }
     }
     
-    private func BuildThemeDict(dictData : NSDictionary) {
+    private func BuildThemeDict(dictData : Dictionary<String, Any>) {
         
-        metaDict = dictData.object(forKey: metaKey) as? NSDictionary
+        metaDict = dictData[metaKey] as? Dictionary<String, String>
         
-        if let themeValuesDict = dictData.object(forKey: themeKey) as? NSDictionary {
+        if let themeValuesDict = dictData[themeKey] as? Dictionary<String, Any> {
             
-            toolbarDict = themeValuesDict.object(forKey: toolbarKey) as? NSDictionary
-            rootDict = themeValuesDict.object(forKey: rootKey) as? NSDictionary
-            tabsbarDict = themeValuesDict.object(forKey: tabsbarKey) as? NSDictionary
+            self.dictData = dictData
+            self.themeValuesDict = themeValuesDict
+            
+            toolbarDict = themeValuesDict[toolbarKey] as? Dictionary<String, String>
+            rootDict = themeValuesDict[rootKey] as? Dictionary<String, String>
+            tabsbarDict = themeValuesDict[tabsbarKey] as? Dictionary<String, String>
         } else {
             print("Failed Getting Themecomponents from dictioary")
         }
@@ -56,6 +62,29 @@ class ThemeBuilder {
         }
         
         return total
+    }
+    
+    func saveCurrentDict() {
+        metaDict?.updateValue("My new Theme", forKey: "name")
+        themeValuesDict?.updateValue(self.toolbarDict!, forKey: self.toolbarKey)
+        themeValuesDict?.updateValue(self.rootDict!, forKey: self.rootKey)
+        themeValuesDict?.updateValue(self.tabsbarDict!, forKey: self.tabsbarKey)
+        
+        self.dictData?.updateValue(self.metaDict!, forKey: self.metaKey)
+        
+        self.dictData?.updateValue(self.themeValuesDict!, forKey: self.themeKey)
+        
+        let theJSONData = try? JSONSerialization.data(withJSONObject: self.dictData!,options: [.fragmentsAllowed, .prettyPrinted, .sortedKeys, .withoutEscapingSlashes])
+        
+        if theJSONData != nil, let documentDirectory = FileManager.default.urls(for: .downloadsDirectory,
+                                                                                   in: .userDomainMask).first {
+            let pathWithFileName = documentDirectory.appendingPathComponent("myJsonData.jsonc-default")
+            do {
+                try theJSONData!.write(to: pathWithFileName)
+            } catch {
+                print(error)
+            }
+        }
     }
 }
 

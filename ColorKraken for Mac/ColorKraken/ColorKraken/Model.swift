@@ -39,6 +39,9 @@ class Color: Equatable, CustomStringConvertible {
         return "\(String(format: "R: %.3f", red)), \(String(format: "G: %.3f", green)), \(String(format: "B: %.3f", blue)), \(String(format: "A: %.2f", alpha))"
     }
     
+    var rgbaDescription: String {
+        return "rgba(\(String(format: "%.3f", red)),\(String(format: "%.3f", green)),\(String(format: "%.3f", blue)),\(String(format: "%.2f", alpha)))"
+    }
     
     init(withID id: Int) {
         self.id = id        
