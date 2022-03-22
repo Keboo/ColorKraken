@@ -64,21 +64,23 @@ class ThemeBuilder {
         return total
     }
     
-    func saveCurrentDict() {
-        metaDict?.updateValue("My new Theme", forKey: "name")
+    func saveCurrentDictData() {
+        
         themeValuesDict?.updateValue(self.toolbarDict!, forKey: self.toolbarKey)
         themeValuesDict?.updateValue(self.rootDict!, forKey: self.rootKey)
         themeValuesDict?.updateValue(self.tabsbarDict!, forKey: self.tabsbarKey)
         
         self.dictData?.updateValue(self.metaDict!, forKey: self.metaKey)
-        
         self.dictData?.updateValue(self.themeValuesDict!, forKey: self.themeKey)
+    }
+    
+    func saveDataToFile(withFile fileName: String) {
         
         let theJSONData = try? JSONSerialization.data(withJSONObject: self.dictData!,options: [.fragmentsAllowed, .prettyPrinted, .sortedKeys, .withoutEscapingSlashes])
         
-        if theJSONData != nil, let documentDirectory = FileManager.default.urls(for: .downloadsDirectory,
-                                                                                   in: .userDomainMask).first {
-            let pathWithFileName = documentDirectory.appendingPathComponent("myJsonData.jsonc-default")
+        if theJSONData != nil, let documentDirectory = FileManager.default.urls(for: .downloadsDirectory,                                                                                    in: .userDomainMask).first {
+            let pathWithFileName = documentDirectory.appendingPathComponent("\(fileName).jsonc-default")
+            
             do {
                 try theJSONData!.write(to: pathWithFileName)
             } catch {

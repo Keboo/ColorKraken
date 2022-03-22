@@ -140,7 +140,8 @@ class ViewController: NSViewController {
         //            }
         //        }
         
-        self.themeBuilder?.saveCurrentDict()
+        self.themeBuilder?.saveCurrentDictData()
+        self.themeBuilder?.saveDataToFile(withFile: "newTestTheme")
     }
     
     func getCollectionForSelectedItem() -> Collection? {
