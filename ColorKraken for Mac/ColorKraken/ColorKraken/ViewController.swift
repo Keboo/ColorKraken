@@ -84,64 +84,72 @@ class ViewController: NSViewController {
     
     // MARK: - IBAction Methods
     
-    @IBAction func createCollection(_ sender: Any) {
-        var collectionToExpand: Collection?
+    @IBAction func createTheme(_ sender: Any) {
         
-        if let collection = getCollectionForSelectedItem() {
-            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: collection)
-            collectionToExpand = collection
-        } else {
-            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: nil)
-        }
+        // TODO: ask user the new theme name and call code to fill table with default file.        
         
-        outlineView.reloadData()
-        outlineView.expandItem(collectionToExpand)
+//        var collectionToExpand: Collection?
+//
+//        if let collection = getCollectionForSelectedItem() {
+//            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: collection)
+//            collectionToExpand = collection
+//        } else {
+//            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: nil)
+//        }
+//
+//        outlineView.reloadData()
+//        outlineView.expandItem(collectionToExpand)
     }
     
     
-    @IBAction func addColor(_ sender: Any) {
-        guard let collection = getCollectionForSelectedItem() else { return }
+    @IBAction func saveTheme(_ sender: Any) {
         
-        let newColor = viewModel.addColor(to: collection)
-        outlineView.reloadData()
-        outlineView.expandItem(collection)
+        self.themeBuilder?.saveCurrentDictData()
+        self.themeBuilder?.saveDataToFile(withFile: "newTestTheme")
         
-        let colorRow = outlineView.row(forItem: newColor)
-        outlineView.selectRowIndexes(IndexSet(arrayLiteral: colorRow), byExtendingSelection: false)
+//        guard let collection = getCollectionForSelectedItem() else { return }
+//
+//        let newColor = viewModel.addColor(to: collection)
+//        outlineView.reloadData()
+//        outlineView.expandItem(collection)
+//
+//        let colorRow = outlineView.row(forItem: newColor)
+//        outlineView.selectRowIndexes(IndexSet(arrayLiteral: colorRow), byExtendingSelection: false)
     }
     
     
     @IBAction func removeItem(_ sender: Any) {
-        //        let selectedRow = outlineView.selectedRow
-        //        var result = false
-        //
-        //        if let selectedItem = outlineView.item(atRow: outlineView.selectedRow) as? Color, let parentCollection = getCollectionForSelectedItem() {
-        //            viewModel.remove(item: selectedItem, from: parentCollection)
-        //            result = true
-        //        } else if let selectedItem = outlineView.item(atRow: outlineView.selectedRow) as? Collection {
-        //            if let parentCollection = outlineView.parent(forItem: selectedItem) as? Collection {
-        //                viewModel.remove(item: selectedItem, from: parentCollection)
-        //            } else {
-        //                viewModel.remove(item: selectedItem, from: nil)
-        //            }
-        //
-        //            result = true
-        //        }
-        //
-        //        if result {
-        //            outlineView.reloadData()
-        //
-        //            if selectedRow < outlineView.numberOfRows {
-        //                outlineView.selectRowIndexes(IndexSet(arrayLiteral: selectedRow), byExtendingSelection: false)
-        //            } else {
-        //                if selectedRow - 1 > -1 {
-        //                    outlineView.selectRowIndexes(IndexSet(arrayLiteral: selectedRow - 1), byExtendingSelection: false)
-        //                }
-        //            }
-        //        }
         
-        self.themeBuilder?.saveCurrentDictData()
-        self.themeBuilder?.saveDataToFile(withFile: "newTestTheme")
+        // TODO:  this might come in handy if it turns out GK accepts partial json
+        if false {
+            let selectedRow = outlineView.selectedRow
+            var result = false
+            
+            if let selectedItem = outlineView.item(atRow: outlineView.selectedRow) as? Color, let parentCollection = getCollectionForSelectedItem() {
+                viewModel.remove(item: selectedItem, from: parentCollection)
+                result = true
+            } else if let selectedItem = outlineView.item(atRow: outlineView.selectedRow) as? Collection {
+                if let parentCollection = outlineView.parent(forItem: selectedItem) as? Collection {
+                    viewModel.remove(item: selectedItem, from: parentCollection)
+                } else {
+                    viewModel.remove(item: selectedItem, from: nil)
+                }
+                
+                result = true
+            }
+            
+            if result {
+                outlineView.reloadData()
+                
+                if selectedRow < outlineView.numberOfRows {
+                    outlineView.selectRowIndexes(IndexSet(arrayLiteral: selectedRow), byExtendingSelection: false)
+                } else {
+                    if selectedRow - 1 > -1 {
+                        outlineView.selectRowIndexes(IndexSet(arrayLiteral: selectedRow - 1), byExtendingSelection: false)
+                    }
+                }
+            }
+        }
     }
     
     func getCollectionForSelectedItem() -> Collection? {
@@ -171,9 +179,11 @@ extension ViewController: ColorDetailsViewDelegate {
 // MARK: - NSTextFieldDelegate
 extension ViewController: NSTextFieldDelegate {
     
+    // TODO: Cha nge this to fill values field and save value to dict item
     func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
         guard let collection = outlineView.item(atRow: outlineView.selectedRow) as? Collection else { return true }
         collection.title = (control as! NSTextField).stringValue
+        
         return true
     }
 }
