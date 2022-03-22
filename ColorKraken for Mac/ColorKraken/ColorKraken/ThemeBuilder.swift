@@ -22,10 +22,11 @@ class ThemeBuilder {
     var toolbarDict : Dictionary<String, String>? = nil
     var rootDict : Dictionary<String, String>? = nil
     var tabsbarDict : Dictionary<String, String>? = nil
+    let fileThemeBuilder = FileThemeBuilder()
     
     init() {
         
-        if let dictData = FileThemeBuilder().GetFileData() {
+        if let dictData = fileThemeBuilder.GetFileData() {
             
             BuildThemeDict(dictData: dictData)
             print("all 3 dictionaries built succesfully")
@@ -78,7 +79,7 @@ class ThemeBuilder {
         
         let theJSONData = try? JSONSerialization.data(withJSONObject: self.dictData!,options: [.fragmentsAllowed, .prettyPrinted, .sortedKeys, .withoutEscapingSlashes])
         
-        if theJSONData != nil, let documentDirectory = FileManager.default.urls(for: .downloadsDirectory,                                                                                    in: .userDomainMask).first {
+        if theJSONData != nil, let documentDirectory = fileThemeBuilder.getGKDefaultThemePath() {
             let pathWithFileName = documentDirectory.appendingPathComponent("\(fileName).jsonc-default")
             
             do {

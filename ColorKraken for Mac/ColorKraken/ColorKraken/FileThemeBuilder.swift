@@ -10,11 +10,13 @@ import AppKit
 
 class FileThemeBuilder {
     
+    let fileManager = FileManager.default
+    
     func GetFileData() -> Dictionary<String, Any>? {
         
         var fileData : Dictionary<String, Any>? = nil
         
-        if let fileURL = GetThemeFileUrl() {
+        if let fileURL = GetDefaultThemeFileUrl() {
             
             let dataStr = try? String(contentsOf: fileURL)
             
@@ -32,29 +34,27 @@ class FileThemeBuilder {
         return fileData
     }
     
-    func GetThemeFileUrl() -> URL? {
+    func GetDefaultThemeFileUrl() -> URL? {
         
-        let fileManager = FileManager.default
-        var filePath = fileManager.homeDirectoryForCurrentUser
+        var filePath = getGKDefaultThemePath()
         let defaultFileExtension = ".jsonc-default"
         var fileName = isDarkMode() ? "dark" : "light"
-        fileName += defaultFileExtension
+        fileName += defaultFileExtension        
         
-        filePath.appendPathComponent(".gitkraken/themes")
         do {
-            let items = try fileManager.contentsOfDirectory(atPath: filePath.path)
+            let items = try fileManager.contentsOfDirectory(atPath: filePath!.path)
             
             var found = false
             for item in items {
                 
                 if fileName.compare(item, options: .caseInsensitive) == .orderedSame {
-                    filePath.appendPathComponent(fileName)
+                    filePath!.appendPathComponent(fileName)
                     found = true
                     print("Found \(item)")
                 }
             }
             if !found, let file = items.first(where: { $0.contains(defaultFileExtension)}) {
-                filePath.appendPathComponent(file)
+                filePath!.appendPathComponent(file)
             }
         } catch {
             // failed to read directory – bad permissions, perhaps?
@@ -63,6 +63,14 @@ class FileThemeBuilder {
         }
         
         return filePath
+    }
+    
+    func getGKDefaultThemePath() -> URL? {
+        
+        var defaultGKThemePath = fileManager.homeDirectoryForCurrentUser
+        defaultGKThemePath.appendPathComponent(".gitkraken/themes")
+        
+        return defaultGKThemePath
     }
     
     private func isDarkMode() -> Bool {
