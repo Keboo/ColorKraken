@@ -44,7 +44,7 @@ class Color: Equatable, CustomStringConvertible {
     }
     
     init(withID id: Int) {
-        self.id = id        
+        self.id = id
     }
     
     
@@ -82,12 +82,12 @@ class Collection: Equatable {
     var title: String?
     var items = [Any]()
     var totalItems: Int { get { return items.count }}
+    var colorType : ColorType = .none
     
     init(withTitle title: String, id: Int) {
         self.title = title
         self.id = id
     }
-    
     
     /**
      It removes either a color or another collection from
@@ -147,4 +147,12 @@ struct Model {
         nextColorID += 1
         return nextColorID - 1
     }
+}
+
+enum ColorType {
+
+    case root
+    case toolbar
+    case tabsbar
+    case none
 }

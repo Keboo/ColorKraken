@@ -19,9 +19,9 @@ class ThemeBuilder {
     var dictData : Dictionary<String, Any>? = nil
     var metaDict : Dictionary<String, String>? = nil
     var themeValuesDict : Dictionary<String, Any>? = nil
-    var toolbarDict : Dictionary<String, String>? = nil
-    var rootDict : Dictionary<String, String>? = nil
-    var tabsbarDict : Dictionary<String, String>? = nil
+    var toolbarDict : Dictionary<String, String> = [:]
+    var rootDict : Dictionary<String, String> = [:]
+    var tabsbarDict : Dictionary<String, String> = [:]
     let fileThemeBuilder = FileThemeBuilder()
     
     init() {
@@ -44,9 +44,9 @@ class ThemeBuilder {
             self.dictData = dictData
             self.themeValuesDict = themeValuesDict
             
-            toolbarDict = themeValuesDict[toolbarKey] as? Dictionary<String, String>
-            rootDict = themeValuesDict[rootKey] as? Dictionary<String, String>
-            tabsbarDict = themeValuesDict[tabsbarKey] as? Dictionary<String, String>
+            toolbarDict = themeValuesDict[toolbarKey] as! Dictionary<String, String>
+            rootDict = themeValuesDict[rootKey] as! Dictionary<String, String>
+            tabsbarDict = themeValuesDict[tabsbarKey] as! Dictionary<String, String>
         } else {
             print("Failed Getting Themecomponents from dictioary")
         }
@@ -57,9 +57,8 @@ class ThemeBuilder {
         var total = 0
         
         for dict in [self.toolbarDict, self.tabsbarDict, self.rootDict] {
-            if dict != nil {
-                total = dict!.count
-            }
+            
+            total += dict.count
         }
         
         return total
@@ -67,9 +66,9 @@ class ThemeBuilder {
     
     func saveCurrentDictData() {
         
-        themeValuesDict?.updateValue(self.toolbarDict!, forKey: self.toolbarKey)
-        themeValuesDict?.updateValue(self.rootDict!, forKey: self.rootKey)
-        themeValuesDict?.updateValue(self.tabsbarDict!, forKey: self.tabsbarKey)
+        themeValuesDict?.updateValue(self.toolbarDict, forKey: self.toolbarKey)
+        themeValuesDict?.updateValue(self.rootDict, forKey: self.rootKey)
+        themeValuesDict?.updateValue(self.tabsbarDict, forKey: self.tabsbarKey)
         
         self.dictData?.updateValue(self.metaDict!, forKey: self.metaKey)
         self.dictData?.updateValue(self.themeValuesDict!, forKey: self.themeKey)
@@ -87,6 +86,23 @@ class ThemeBuilder {
             } catch {
                 print(error)
             }
+        }
+    }
+    
+    func updateValue(forColor color: Color, forDictionaryType type: ColorType){
+        
+        switch type {
+        case .root:
+            self.rootDict.updateValue(color.valueName, forKey: color.keyName)
+            
+        case .tabsbar:
+            self.tabsbarDict.updateValue(color.valueName, forKey: color.keyName)
+            
+        case .toolbar:
+            self.toolbarDict.updateValue(color.valueName, forKey: color.keyName)
+            
+        default:
+            print("dictionary type: \(type) could not be updated")
         }
     }
 }

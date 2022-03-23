@@ -12,12 +12,11 @@ class ViewController: NSViewController {
     // MARK: - IBOutlet Properties
     
     @IBOutlet weak var outlineView: NSOutlineView!
-    
     @IBOutlet weak var containerView: NSView!
     
     
     // MARK: - Properties
-    var themeBuilder : ThemeBuilder? = nil
+    var themeBuilder : ThemeBuilder
     var viewModel = ViewModel()
     
     lazy var colorDetailsView: ColorDetailsView = {
@@ -34,7 +33,12 @@ class ViewController: NSViewController {
     }()
     
     
-    // MARK: - VC Lifecycle
+    // MARK: - VC Lifecycle  
+        
+    required init?(coder: NSCoder) {
+        self.themeBuilder = ThemeBuilder()
+        super.init(coder: coder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,18 +47,18 @@ class ViewController: NSViewController {
         outlineView.dataSource = self
         outlineView.delegate = self
         
-        self.themeBuilder = ThemeBuilder()
-        loadDict(withTitle: "Root Itens",dict: self.themeBuilder?.rootDict)
-        loadDict(withTitle: "ToolBar Itens",dict: self.themeBuilder?.toolbarDict)
-        loadDict(withTitle: "Tabsbar Itens", dict: self.themeBuilder?.tabsbarDict)
+        loadDict(withTitle: "Root Itens", dictionary: self.themeBuilder.rootDict, colorType: .root)
+        loadDict(withTitle: "ToolBar Itens", dictionary: self.themeBuilder.toolbarDict, colorType: .toolbar)
+        loadDict(withTitle: "Tabsbar Itens", dictionary: self.themeBuilder.tabsbarDict, colorType: .tabsbar)
     }
     
     // MARK: - Dictionary/File manipulation
-    func loadDict(withTitle title: String, dict: Dictionary<String, String>?) {
+    func loadDict(withTitle title: String, dictionary: Dictionary<String, String>, colorType: ColorType) {
         
-        if let dictionary = dict {
+        if dictionary.count != 0 {
             
             let collection = viewModel.createCollection(withTitle: title, inCollection: nil)
+            collection.colorType = colorType
             
             loadDictItems(inCollection: collection, fromDict: dictionary)
             
@@ -81,42 +85,41 @@ class ViewController: NSViewController {
         }
     }
     
-    
     // MARK: - IBAction Methods
     
     @IBAction func createTheme(_ sender: Any) {
         
-        // TODO: ask user the new theme name and call code to fill table with default file.        
+        // TODO: ask user the new theme name and call code to fill table with default file.
         
-//        var collectionToExpand: Collection?
-//
-//        if let collection = getCollectionForSelectedItem() {
-//            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: collection)
-//            collectionToExpand = collection
-//        } else {
-//            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: nil)
-//        }
-//
-//        outlineView.reloadData()
-//        outlineView.expandItem(collectionToExpand)
+        //        var collectionToExpand: Collection?
+        //
+        //        if let collection = getCollectionForSelectedItem() {
+        //            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: collection)
+        //            collectionToExpand = collection
+        //        } else {
+        //            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: nil)
+        //        }
+        //
+        //        outlineView.reloadData()
+        //        outlineView.expandItem(collectionToExpand)
     }
-    
     
     @IBAction func saveTheme(_ sender: Any) {
         
-        self.themeBuilder?.saveCurrentDictData()
-        self.themeBuilder?.saveDataToFile(withFile: "newTestTheme")
-        
-//        guard let collection = getCollectionForSelectedItem() else { return }
-//
-//        let newColor = viewModel.addColor(to: collection)
-//        outlineView.reloadData()
-//        outlineView.expandItem(collection)
-//
-//        let colorRow = outlineView.row(forItem: newColor)
-//        outlineView.selectRowIndexes(IndexSet(arrayLiteral: colorRow), byExtendingSelection: false)
+        // TODO: ask user for new file name in the create theme action and set it here too
+        self.themeBuilder.metaDict?.updateValue("newTestTheme", forKey: "name")
+        self.themeBuilder.saveCurrentDictData()
+        self.themeBuilder.saveDataToFile(withFile: "newTestTheme")
+                
+        //        guard let collection = getCollectionForSelectedItem() else { return }
+        //
+        //        let newColor = viewModel.addColor(to: collection)
+        //        outlineView.reloadData()
+        //        outlineView.expandItem(collection)
+        //
+        //        let colorRow = outlineView.row(forItem: newColor)
+        //        outlineView.selectRowIndexes(IndexSet(arrayLiteral: colorRow), byExtendingSelection: false)
     }
-    
     
     @IBAction func removeItem(_ sender: Any) {
         
@@ -179,10 +182,15 @@ extension ViewController: ColorDetailsViewDelegate {
 // MARK: - NSTextFieldDelegate
 extension ViewController: NSTextFieldDelegate {
     
-    // TODO: Cha nge this to fill values field and save value to dict item
+    // TODO: Change this to fill values field and save value to dict item
     func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
-        guard let collection = outlineView.item(atRow: outlineView.selectedRow) as? Collection else { return true }
-        collection.title = (control as! NSTextField).stringValue
+        //        guard let collection = outlineView.item(atRow: outlineView.selectedRow) as? Collection else { return true }
+        //        collection.title = (control as! NSTextField).stringValue
+        guard let color = outlineView.item(atRow: outlineView.selectedRow) as? Color else { return true }
+        let textFieldValue = (control as! NSTextField).stringValue
+        color.valueName = textFieldValue
+        let colorType = getCollectionForSelectedItem()?.colorType ?? ColorType.none
+        self.themeBuilder.updateValue(forColor: color, forDictionaryType: colorType)
         
         return true
     }
@@ -193,28 +201,11 @@ extension ViewController: NSOutlineViewDataSource {
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         
-        //        if item == nil {
-        //            return viewModel.model.totalCollections
-        //        } else {
-        //            if let item = item as? Collection {
-        //                return item.totalItems
-        //            } else {
-        //                return 1
-        //            }
-        //        }
         return item == nil ? viewModel.model.totalCollections : (item as? Collection)?.totalItems ?? 1
     }
     
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-        //        if item == nil {
-        //            return viewModel.model.collections[index]
-        //        } else {
-        //            if let collection = item as? Collection {
-        //                return collection.items[index]
-        //            } else {
-        //                return item!
-        //            }
-        //        }
+        
         return item == nil ? viewModel.model.collections[index] : (item as? Collection)?.items[index] ?? item!
     }
     
@@ -238,8 +229,7 @@ extension ViewController: NSOutlineViewDelegate {
             
             if let collection = item as? Collection {
                 cell.textField?.stringValue = collection.title ?? ""
-                cell.textField?.isEditable = true
-                cell.textField?.delegate = self
+                cell.textField?.isEditable = false
                 cell.textField?.layer?.backgroundColor = .clear
             } else if let color = item as? Color {
                 
@@ -260,6 +250,8 @@ extension ViewController: NSOutlineViewDelegate {
                 cell.textField?.font = NSFont.boldSystemFont(ofSize: cell.textField?.font?.pointSize ?? 13.0)
             } else if let color = item as? Color {
                 cell.textField?.stringValue = color.valueName//color.description
+                cell.textField?.isEditable = true
+                cell.textField?.delegate = self
                 cell.textField?.font = NSFont.systemFont(ofSize: cell.textField?.font?.pointSize ?? 13.0)
             }
             return cell
