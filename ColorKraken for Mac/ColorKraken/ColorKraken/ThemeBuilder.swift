@@ -91,15 +91,18 @@ class ThemeBuilder {
     
     func updateValue(forColor color: Color, forDictionaryType type: ColorType){
         
+        let value = color.colorWheelMode ? color.rgbaDescription : color.valueName
+        
         switch type {
+            
         case .root:
-            self.rootDict.updateValue(color.valueName, forKey: color.keyName)
+            self.rootDict.updateValue(value, forKey: color.keyName)
             
         case .tabsbar:
-            self.tabsbarDict.updateValue(color.valueName, forKey: color.keyName)
+            self.tabsbarDict.updateValue(value, forKey: color.keyName)
             
         case .toolbar:
-            self.toolbarDict.updateValue(color.valueName, forKey: color.keyName)
+            self.toolbarDict.updateValue(value, forKey: color.keyName)
             
         default:
             print("dictionary type: \(type) could not be updated")

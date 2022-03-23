@@ -33,8 +33,8 @@ class ViewController: NSViewController {
     }()
     
     
-    // MARK: - VC Lifecycle  
-        
+    // MARK: - VC Lifecycle
+    
     required init?(coder: NSCoder) {
         self.themeBuilder = ThemeBuilder()
         super.init(coder: coder)
@@ -110,7 +110,7 @@ class ViewController: NSViewController {
         self.themeBuilder.metaDict?.updateValue("newTestTheme", forKey: "name")
         self.themeBuilder.saveCurrentDictData()
         self.themeBuilder.saveDataToFile(withFile: "newTestTheme")
-                
+        
         //        guard let collection = getCollectionForSelectedItem() else { return }
         //
         //        let newColor = viewModel.addColor(to: collection)
@@ -171,7 +171,10 @@ class ViewController: NSViewController {
 extension ViewController: ColorDetailsViewDelegate {
     func shouldUpdateColor(withRed red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         if let color = outlineView.item(atRow: outlineView.selectedRow) as? Color {
+            color.colorWheelMode = true
             color.update(withRed: red, green: green, blue: blue, alpha: alpha)
+            let colorType = getCollectionForSelectedItem()?.colorType ?? ColorType.none
+            self.themeBuilder.updateValue(forColor: color, forDictionaryType: colorType)
             outlineView.reloadItem(color)
         }
     }
@@ -190,6 +193,7 @@ extension ViewController: NSTextFieldDelegate {
         let textFieldValue = (control as! NSTextField).stringValue
         color.valueName = textFieldValue
         let colorType = getCollectionForSelectedItem()?.colorType ?? ColorType.none
+        color.colorWheelMode = false
         self.themeBuilder.updateValue(forColor: color, forDictionaryType: colorType)
         
         return true
@@ -249,7 +253,12 @@ extension ViewController: NSOutlineViewDelegate {
                 cell.textField?.stringValue = collection.totalItems != 1 ? "\(collection.totalItems) items" : "1 item"
                 cell.textField?.font = NSFont.boldSystemFont(ofSize: cell.textField?.font?.pointSize ?? 13.0)
             } else if let color = item as? Color {
-                cell.textField?.stringValue = color.valueName//color.description
+                if color.colorWheelMode {
+                    cell.textField?.stringValue = color.rgbaDescription
+                    color.colorWheelMode = false
+                } else {
+                    cell.textField?.stringValue = color.valueName//color.description
+                }
                 cell.textField?.isEditable = true
                 cell.textField?.delegate = self
                 cell.textField?.font = NSFont.systemFont(ofSize: cell.textField?.font?.pointSize ?? 13.0)

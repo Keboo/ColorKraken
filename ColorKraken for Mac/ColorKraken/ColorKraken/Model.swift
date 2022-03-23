@@ -32,6 +32,7 @@ class Color: Equatable, CustomStringConvertible {
     var alpha: CGFloat = 1.0
     var keyName : String = ""
     var valueName : String = ""
+    var colorWheelMode = false
     
     /// It returns the RGBA values formatted as they should be
     /// displayed to the outline view.
