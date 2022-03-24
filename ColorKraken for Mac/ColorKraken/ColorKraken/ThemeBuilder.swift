@@ -79,7 +79,7 @@ class ThemeBuilder {
         let theJSONData = try? JSONSerialization.data(withJSONObject: self.dictData!,options: [.fragmentsAllowed, .prettyPrinted, .sortedKeys, .withoutEscapingSlashes])
         
         if theJSONData != nil, let documentDirectory = fileThemeBuilder.getGKDefaultThemePath() {
-            let pathWithFileName = documentDirectory.appendingPathComponent("\(fileName).jsonc-default")
+            let pathWithFileName = documentDirectory.appendingPathComponent("\(fileName).jsonc")
             
             do {
                 try theJSONData!.write(to: pathWithFileName)
