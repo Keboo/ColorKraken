@@ -51,16 +51,15 @@ class ColorDetailsView: NSView {
     // MARK: - IBAction Methods
     
     @IBAction func showColorsPanel(_ sender: Any) {
-        redLabel.stringValue = String(format: "Red: %.3f", colorWell.color.redComponent)
-        greenLabel.stringValue = String(format: "Green: %.3f", colorWell.color.greenComponent)
-        blueLabel.stringValue = String(format: "Blue: %.3f", colorWell.color.blueComponent)
+        redLabel.stringValue = String(format: "Red: %.f", colorWell.color.redComponent * 255)
+        greenLabel.stringValue = String(format: "Green: %.f", colorWell.color.greenComponent * 255)
+        blueLabel.stringValue = String(format: "Blue: %.f", colorWell.color.blueComponent * 255)
         alphaLabel.stringValue = String(format: "Alpha: %.2f", colorWell.color.alphaComponent)
         
         delegate?.shouldUpdateColor(withRed: colorWell.color.redComponent,
                                     green: colorWell.color.greenComponent,
                                     blue: colorWell.color.blueComponent,
-                                    alpha: colorWell.color.alphaComponent)
-        
+                                    alpha: colorWell.color.alphaComponent)        
     }
     
     
@@ -77,10 +76,10 @@ class ColorDetailsView: NSView {
     
     func set(color: Color) {
         colorWell.color = color.toNSColor()
-        redLabel.stringValue = String(format: "Red: %.3f", color.red)
-        greenLabel.stringValue = String(format: "Green: %.3f", color.green)
-        blueLabel.stringValue = String(format: "Blue: %.3f", color.blue)
-        alphaLabel.stringValue = String(format: "Alpha: %.2f", color.alpha)
+        redLabel.stringValue = String(format: "Red: %.f", color.red * 255)
+        greenLabel.stringValue = String(format: "Green: %.f", color.green * 255)
+        blueLabel.stringValue = String(format: "Blue: %.f", color.blue * 255)
+        alphaLabel.stringValue = String(format: "Alpha: %.f", color.alpha)
     }
  
     
