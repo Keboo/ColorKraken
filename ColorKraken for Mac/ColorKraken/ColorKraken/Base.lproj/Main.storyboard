@@ -705,20 +705,20 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="ColorKraken" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="780" height="580"/>
+                    <view key="view" misplaced="YES" id="m2S-Jp-Qdl">
+                        <rect key="frame" x="0.0" y="0.0" width="680" height="552"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="Jn8-LH-gtG">
-                                <rect key="frame" x="450" y="0.0" width="330" height="580"/>
+                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jn8-LH-gtG">
+                                <rect key="frame" x="350" y="0.0" width="330" height="552"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="330" id="qg9-hV-Igz"/>
                                 </constraints>
                             </customView>
-                            <box boxType="custom" borderWidth="0.0" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="r7V-bb-ad0">
-                                <rect key="frame" x="0.0" y="0.0" width="450" height="30"/>
+                            <box misplaced="YES" boxType="custom" borderWidth="0.0" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="r7V-bb-ad0">
+                                <rect key="frame" x="0.0" y="0.0" width="348" height="30"/>
                                 <view key="contentView" id="Hi7-1p-ZeL">
-                                    <rect key="frame" x="0.0" y="0.0" width="450" height="30"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="348" height="30"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CYo-CR-70O">
@@ -726,7 +726,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="Jxy-fR-qkc"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="collections" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Sg6-q1-bBS">
+                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Sg6-q1-bBS">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -739,7 +739,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="yLT-Fu-Gl1"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="colors" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YvA-0w-T0J">
+                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="externaldrive" catalog="system" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YvA-0w-T0J">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -752,7 +752,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="Inf-z2-b9M"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="delete" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KmA-lh-MJq">
+                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="trash" catalog="system" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KmA-lh-MJq">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -789,14 +789,14 @@
                                 </constraints>
                                 <color key="fillColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </box>
-                            <scrollView autohidesScrollers="YES" horizontalLineScroll="39" horizontalPageScroll="10" verticalLineScroll="39" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rV2-Kz-Hjg">
-                                <rect key="frame" x="0.0" y="30" width="450" height="550"/>
+                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="39" horizontalPageScroll="10" verticalLineScroll="39" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rV2-Kz-Hjg">
+                                <rect key="frame" x="0.0" y="30" width="348" height="522"/>
                                 <clipView key="contentView" id="kk5-Lf-CYK">
-                                    <rect key="frame" x="1" y="1" width="448" height="548"/>
+                                    <rect key="frame" x="1" y="1" width="346" height="520"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" headerView="IHc-q2-NFO" viewBased="YES" indentationPerLevel="13" outlineTableColumn="OJB-Ga-mHV" id="Aok-lC-cXE">
-                                            <rect key="frame" x="0.0" y="0.0" width="532" height="520"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="532" height="492"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="17" height="15"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -880,7 +880,7 @@
                                     </subviews>
                                 </clipView>
                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="mil-xW-mJ8">
-                                    <rect key="frame" x="1" y="533" width="448" height="16"/>
+                                    <rect key="frame" x="1" y="505" width="346" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="T3H-mi-cKa">
@@ -913,12 +913,12 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="74" y="881"/>
+            <point key="canvasLocation" x="24" y="881"/>
         </scene>
     </scenes>
     <resources>
-        <image name="collections" width="24" height="24"/>
-        <image name="colors" width="24" height="24"/>
-        <image name="delete" width="24" height="24"/>
+        <image name="NSAddTemplate" width="14" height="13"/>
+        <image name="externaldrive" catalog="system" width="18" height="13"/>
+        <image name="trash" catalog="system" width="15" height="17"/>
     </resources>
 </document>
