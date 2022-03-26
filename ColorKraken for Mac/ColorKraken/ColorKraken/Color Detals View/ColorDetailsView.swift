@@ -59,7 +59,7 @@ class ColorDetailsView: NSView {
         delegate?.shouldUpdateColor(withRed: colorWell.color.redComponent,
                                     green: colorWell.color.greenComponent,
                                     blue: colorWell.color.blueComponent,
-                                    alpha: colorWell.color.alphaComponent)        
+                                    alpha: colorWell.color.alphaComponent)
     }
     
     

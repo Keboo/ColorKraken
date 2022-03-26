@@ -11,6 +11,7 @@ import AppKit
 class FileThemeBuilder {
     
     let fileManager = FileManager.default
+    @IBOutlet weak var fileThemePicker: NSComboBox!
     
     func GetFileData() -> Dictionary<String, Any>? {
         

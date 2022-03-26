@@ -760,11 +760,29 @@
                                                 <action selector="removeItem:" target="XfG-lQ-9wD" id="Bgy-PD-ooJ"/>
                                             </connections>
                                         </button>
+                                        <comboBox verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FAe-DZ-0mf">
+                                            <rect key="frame" x="58" y="2" width="253" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="250" id="kt6-9u-66w"/>
+                                            </constraints>
+                                            <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="g3I-hN-oOI">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                <objectValues>
+                                                    <string>Item 1</string>
+                                                    <string>Item 2</string>
+                                                    <string>Item 3</string>
+                                                </objectValues>
+                                            </comboBoxCell>
+                                        </comboBox>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="MgE-mK-EtH" firstAttribute="leading" secondItem="1rJ-xt-daa" secondAttribute="trailing" id="3Sc-2t-YIZ"/>
                                         <constraint firstItem="1rJ-xt-daa" firstAttribute="leading" secondItem="CYo-CR-70O" secondAttribute="trailing" id="Bda-gO-3OM"/>
                                         <constraint firstItem="MgE-mK-EtH" firstAttribute="top" secondItem="Hi7-1p-ZeL" secondAttribute="top" id="CVd-Kb-FyP"/>
+                                        <constraint firstAttribute="trailing" secondItem="FAe-DZ-0mf" secondAttribute="trailing" id="EQJ-cx-xYc"/>
+                                        <constraint firstItem="FAe-DZ-0mf" firstAttribute="centerY" secondItem="MgE-mK-EtH" secondAttribute="centerY" id="FTw-Ei-blT"/>
                                         <constraint firstAttribute="bottom" secondItem="1rJ-xt-daa" secondAttribute="bottom" id="NVa-hV-bV2"/>
                                         <constraint firstItem="CYo-CR-70O" firstAttribute="leading" secondItem="Hi7-1p-ZeL" secondAttribute="leading" id="Qi4-9x-L6q"/>
                                         <constraint firstAttribute="bottom" secondItem="CYo-CR-70O" secondAttribute="bottom" id="Rvx-s0-ZvG"/>
@@ -777,6 +795,7 @@
                                         <constraint firstItem="CYo-CR-70O" firstAttribute="top" secondItem="Hi7-1p-ZeL" secondAttribute="top" id="dV2-dB-l0h"/>
                                         <constraint firstItem="CYo-CR-70O" firstAttribute="top" secondItem="Hi7-1p-ZeL" secondAttribute="top" id="kL6-wi-vTE"/>
                                         <constraint firstAttribute="bottom" secondItem="MgE-mK-EtH" secondAttribute="bottom" id="oZM-OE-BFl"/>
+                                        <constraint firstItem="FAe-DZ-0mf" firstAttribute="top" secondItem="Hi7-1p-ZeL" secondAttribute="top" constant="6" id="qnf-J1-7tD"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MgE-mK-EtH" secondAttribute="trailing" constant="20" symbolic="YES" id="uTg-wL-30k"/>
                                         <constraint firstItem="1rJ-xt-daa" firstAttribute="leading" secondItem="CYo-CR-70O" secondAttribute="trailing" id="ubA-AQ-GKl"/>
                                         <constraint firstItem="CYo-CR-70O" firstAttribute="leading" secondItem="Hi7-1p-ZeL" secondAttribute="leading" id="v0T-8G-ms6"/>
@@ -905,6 +924,9 @@
                             <constraint firstItem="Jn8-LH-gtG" firstAttribute="leading" secondItem="r7V-bb-ad0" secondAttribute="trailing" id="qJK-vn-5TU"/>
                             <constraint firstItem="r7V-bb-ad0" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="qV6-FO-F4P"/>
                         </constraints>
+                        <connections>
+                            <outlet property="fileThemePicker" destination="FAe-DZ-0mf" id="fMG-6V-uNH"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="containerView" destination="Jn8-LH-gtG" id="54v-v0-qTu"/>
