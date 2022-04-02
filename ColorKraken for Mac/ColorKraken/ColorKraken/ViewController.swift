@@ -18,6 +18,7 @@ class ViewController: NSViewController {
     // MARK: - Properties
     var themeBuilder : ThemeBuilder
     var viewModel = ViewModel()
+    var curThemeName : String? = nil
     
     lazy var colorDetailsView: ColorDetailsView = {
         let view = ColorDetailsView()
@@ -47,6 +48,10 @@ class ViewController: NSViewController {
         outlineView.dataSource = self
         outlineView.delegate = self
         
+        createDefaultTheme()
+    }
+    
+    func createDefaultTheme() {
         loadDict(withTitle: "Root Itens", dictionary: self.themeBuilder.rootDict, colorType: .root)
         loadDict(withTitle: "ToolBar Itens", dictionary: self.themeBuilder.toolbarDict, colorType: .toolbar)
         loadDict(withTitle: "Tabsbar Itens", dictionary: self.themeBuilder.tabsbarDict, colorType: .tabsbar)
@@ -89,36 +94,31 @@ class ViewController: NSViewController {
     
     @IBAction func createTheme(_ sender: Any) {
         
-        // TODO: ask user the new theme name and call code to fill table with default file.
+        let alertController = NSAlert()
+        alertController.messageText = "Enter The New Theme Name"
+        alertController.alertStyle = .informational
+        alertController.addButton(withTitle: "Cancel")
+        alertController.addButton(withTitle: "Save")
         
-        //        var collectionToExpand: Collection?
-        //
-        //        if let collection = getCollectionForSelectedItem() {
-        //            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: collection)
-        //            collectionToExpand = collection
-        //        } else {
-        //            _ = viewModel.createCollection(withTitle: "New Collection", inCollection: nil)
-        //        }
-        //
-        //        outlineView.reloadData()
-        //        outlineView.expandItem(collectionToExpand)
+        let textBox = NSTextField(string: "my theme name")
+        alertController.accessoryView = textBox
+        textBox.frame.size = CGSize(width: alertController.window.frame.size.width - 20, height: 20)
+        
+        if alertController.runModal() == .alertSecondButtonReturn {
+            self.curThemeName = textBox.stringValue
+            print("creating file: \(self.curThemeName ?? "not found")")
+        }
     }
     
     @IBAction func saveTheme(_ sender: Any) {
         
-        // TODO: ask user for new file name in the create theme action and set it here too
-        self.themeBuilder.metaDict?.updateValue("newTestTheme", forKey: "name")
-        self.themeBuilder.saveCurrentDictData()
-        self.themeBuilder.saveDataToFile(withFile: "newTestTheme")
-        
-        //        guard let collection = getCollectionForSelectedItem() else { return }
-        //
-        //        let newColor = viewModel.addColor(to: collection)
-        //        outlineView.reloadData()
-        //        outlineView.expandItem(collection)
-        //
-        //        let colorRow = outlineView.row(forItem: newColor)
-        //        outlineView.selectRowIndexes(IndexSet(arrayLiteral: colorRow), byExtendingSelection: false)
+        if self.curThemeName == nil || self.curThemeName == "" {
+            createTheme((Any).self)
+        } else {
+            self.themeBuilder.metaDict?.updateValue(self.curThemeName ?? "defaultName", forKey: "name")
+            self.themeBuilder.saveCurrentDictData()
+            self.themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName")
+        }
     }
     
     @IBAction func removeItem(_ sender: Any) {
