@@ -456,3 +456,5 @@ $RECYCLE.BIN/
 ColorKraken for Mac/ColorKraken.xcodeproj/project.xcworkspace/xcuserdata/brucegomes.xcuserdatad/UserInterfaceState.xcuserstate
 
 *.xcuserstate
+
+*.xcbkptlist
