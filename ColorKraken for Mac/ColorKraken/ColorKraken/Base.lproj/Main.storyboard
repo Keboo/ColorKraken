@@ -701,10 +701,10 @@
             </objects>
             <point key="canvasLocation" x="75" y="250"/>
         </scene>
-        <!--View Controller-->
+        <!--File Theme Builder()-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="ColorKraken" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="XfG-lQ-9wD" customClass="FileThemeBuilder()" customModule="ColorKraken" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" misplaced="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="680" height="552"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -922,12 +922,10 @@
                             <constraint firstItem="Jn8-LH-gtG" firstAttribute="leading" secondItem="r7V-bb-ad0" secondAttribute="trailing" id="qJK-vn-5TU"/>
                             <constraint firstItem="r7V-bb-ad0" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="qV6-FO-F4P"/>
                         </constraints>
-                        <connections>
-                            <outlet property="fileThemePicker" destination="FAe-DZ-0mf" id="fMG-6V-uNH"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="containerView" destination="Jn8-LH-gtG" id="54v-v0-qTu"/>
+                        <outlet property="fileThemePicker" destination="FAe-DZ-0mf" id="O9G-KW-uSq"/>
                         <outlet property="outlineView" destination="Aok-lC-cXE" id="ir4-Js-uMA"/>
                     </connections>
                 </viewController>

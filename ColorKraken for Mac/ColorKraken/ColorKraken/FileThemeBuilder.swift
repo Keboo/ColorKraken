@@ -11,13 +11,20 @@ import AppKit
 class FileThemeBuilder {
     
     let fileManager = FileManager.default
+    
     @IBOutlet weak var fileThemePicker: NSComboBox!
+        
+    init() {
+        self.fileThemePicker.isEditable = false
+        self.fileThemePicker.isEnabled = false
+        self.fileThemePicker.hasVerticalScroller = true
+    }
     
     func GetFileData() -> Dictionary<String, Any>? {
         
         var fileData : Dictionary<String, Any>? = nil
         
-        if let fileURL = GetDefaultThemeFileUrl() {
+        if let fileURL = GetCustomThemesURL() ?? GetDefaultThemeFileUrl() {
             
             let dataStr = try? String(contentsOf: fileURL)
             
@@ -35,12 +42,46 @@ class FileThemeBuilder {
         return fileData
     }
     
+    func GetCustomThemesURL() -> URL? {
+        let filePath = getGKDefaultThemePath()
+        let customThemeExtension = ".jsonc"
+        var customThemes : [URL] = []
+        
+        do {
+            let items = try fileManager.contentsOfDirectory(atPath: filePath!.path)
+            let urls = items.filter({$0.containsExtension(word: customThemeExtension)})
+            
+            for file in urls {
+                customThemes = [URL]()
+                customThemes.append((getGKDefaultThemePath()?.appendingPathComponent(file))!)
+            }
+            
+        } catch {
+            // failed to read directory – bad permissions, perhaps?
+            // TODO:  show this alert to the user
+            print("Custom File URLs Not Found, or Directory doesn't have permissions")
+        }
+        
+        if !customThemes.isEmpty {
+            populatePickerWithCustomThemes(customThemes: customThemes)
+            return customThemes.first
+        }
+        
+        return nil
+    }
+    
+    func populatePickerWithCustomThemes(customThemes : [URL]) {
+        self.fileThemePicker.addItems(withObjectValues: customThemes)
+        self.fileThemePicker.isEnabled = true
+        self.fileThemePicker.selectItem(withObjectValue: customThemes.first)
+    }
+    
     func GetDefaultThemeFileUrl() -> URL? {
         
         var filePath = getGKDefaultThemePath()
         let defaultFileExtension = ".jsonc-default"
         var fileName = isDarkMode() ? "dark" : "light"
-        fileName += defaultFileExtension        
+        fileName += defaultFileExtension
         
         do {
             let items = try fileManager.contentsOfDirectory(atPath: filePath!.path)
@@ -81,5 +122,12 @@ class FileThemeBuilder {
         } else {
             return true
         }
+    }
+}
+
+extension String {
+    func containsExtension(word : String) -> Bool
+    {
+        return self.range(of: "\(word)\\b", options: .regularExpression) != nil
     }
 }

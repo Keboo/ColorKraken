@@ -31,7 +31,7 @@ class ThemeBuilder {
             BuildThemeDict(dictData: dictData)
             print("all 3 dictionaries built succesfully")
         } else {
-            print("Failed Getting Dictionary from Json")
+            print("Failed Getting Dictionary from GK default Json")
         }
     }
     
@@ -48,7 +48,7 @@ class ThemeBuilder {
             rootDict = themeValuesDict[rootKey] as! Dictionary<String, String>
             tabsbarDict = themeValuesDict[tabsbarKey] as! Dictionary<String, String>
         } else {
-            print("Failed Getting Themecomponents from dictioary")
+            print("Failed Getting Theme components from dictioary")
         }
     }
     
@@ -95,17 +95,17 @@ class ThemeBuilder {
         
         switch type {
             
-        case .root:
-            self.rootDict.updateValue(value, forKey: color.keyName)
-            
-        case .tabsbar:
-            self.tabsbarDict.updateValue(value, forKey: color.keyName)
-            
-        case .toolbar:
-            self.toolbarDict.updateValue(value, forKey: color.keyName)
-            
-        default:
-            print("dictionary type: \(type) could not be updated")
+            case .root:
+                self.rootDict.updateValue(value, forKey: color.keyName)
+                
+            case .tabsbar:
+                self.tabsbarDict.updateValue(value, forKey: color.keyName)
+                
+            case .toolbar:
+                self.toolbarDict.updateValue(value, forKey: color.keyName)
+                
+            default:
+                print("dictionary type: \(type) could not be updated")
         }
     }
 }
