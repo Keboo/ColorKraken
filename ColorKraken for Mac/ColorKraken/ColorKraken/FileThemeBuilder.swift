@@ -128,6 +128,6 @@ class FileThemeBuilder {
 extension String {
     func containsExtension(word : String) -> Bool
     {
-        return self.range(of: "\(word)\\b", options: .regularExpression) != nil
+        return self.range(of: "\(word)$", options: .regularExpression) != nil
     }
 }
