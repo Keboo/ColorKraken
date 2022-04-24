@@ -14,7 +14,6 @@ class ViewController: NSViewController {
     @IBOutlet weak var outlineView: NSOutlineView!
     @IBOutlet weak var containerView: NSView!
     
-    
     // MARK: - Properties
     var themeBuilder : ThemeBuilder
     var viewModel = ViewModel()
@@ -44,7 +43,6 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
         outlineView.dataSource = self
         outlineView.delegate = self
         
@@ -123,7 +121,7 @@ class ViewController: NSViewController {
     
     @IBAction func removeItem(_ sender: Any) {
         
-        // TODO:  this might come in handy if it turns out GK accepts partial json
+        // TODO: this might come in handy if it turns out GK accepts partial json and user wants delete items they dont care about
         if false {
             let selectedRow = outlineView.selectedRow
             var result = false
@@ -240,7 +238,7 @@ extension ViewController: NSOutlineViewDelegate {
                 cell.textField?.stringValue = color.keyName
                 cell.textField?.isEditable = false
                 cell.textField?.wantsLayer = true
-                cell.textField?.layer?.backgroundColor = .clear//color.toNSColor().cgColor
+                cell.textField?.layer?.backgroundColor = .clear
                 cell.textField?.layer?.cornerRadius = 5.0
             }
             return cell
@@ -257,7 +255,7 @@ extension ViewController: NSOutlineViewDelegate {
                     cell.textField?.stringValue = color.rgbaDescription
                     color.colorWheelMode = false
                 } else {
-                    cell.textField?.stringValue = color.valueName//color.description
+                    cell.textField?.stringValue = color.valueName
                 }
                 cell.textField?.isEditable = true
                 cell.textField?.delegate = self
