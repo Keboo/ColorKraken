@@ -45,7 +45,7 @@ class FileThemeBuilder {
             let urls = items.filter({$0.containsExtension(word: customThemeExtension)})
             
             for file in urls {
-                customThemes = [URL]()
+                //customThemes = [URL]()
                 customThemes.append((getGKDefaultThemePath()?.appendingPathComponent(file))!)
             }
             

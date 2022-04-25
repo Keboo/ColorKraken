@@ -91,6 +91,11 @@ class ViewController: NSViewController {
     
     // MARK: - IBAction Methods
     
+    @IBAction func selectTheme(_ sender: Any) {
+        
+         print("Selected......")
+    }
+    
     @IBAction func createTheme(_ sender: Any) {
         
         let alertController = NSAlert()

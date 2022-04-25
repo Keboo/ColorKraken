@@ -772,6 +772,9 @@
                                                     <string>Item 3</string>
                                                 </objectValues>
                                             </comboBoxCell>
+                                            <connections>
+                                                <action selector="selectTheme:" target="XfG-lQ-9wD" id="fK6-vN-rOu"/>
+                                            </connections>
                                         </comboBox>
                                     </subviews>
                                     <constraints>
