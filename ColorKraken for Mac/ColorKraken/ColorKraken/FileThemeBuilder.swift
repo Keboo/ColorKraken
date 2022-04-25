@@ -11,14 +11,7 @@ import AppKit
 class FileThemeBuilder {
     
     let fileManager = FileManager.default
-    
-    @IBOutlet weak var fileThemePicker: NSComboBox!
-        
-    init() {
-        self.fileThemePicker.isEditable = false
-        self.fileThemePicker.isEnabled = false
-        self.fileThemePicker.hasVerticalScroller = true
-    }
+    var fileThemePicker: NSComboBox? = nil
     
     func GetFileData() -> Dictionary<String, Any>? {
         
@@ -70,10 +63,19 @@ class FileThemeBuilder {
         return nil
     }
     
+    func configurePicker(picker : NSComboBox) {
+        
+        self.fileThemePicker = picker
+        self.fileThemePicker?.removeAllItems()
+        self.fileThemePicker?.isEditable = false
+        self.fileThemePicker?.isEnabled = true
+        self.fileThemePicker?.hasVerticalScroller = true
+    }
+    
     func populatePickerWithCustomThemes(customThemes : [URL]) {
-        self.fileThemePicker.addItems(withObjectValues: customThemes)
-        self.fileThemePicker.isEnabled = true
-        self.fileThemePicker.selectItem(withObjectValue: customThemes.first)
+        
+        self.fileThemePicker?.addItems(withObjectValues: customThemes)
+        self.fileThemePicker?.selectItem(withObjectValue: customThemes.first)
     }
     
     func GetDefaultThemeFileUrl() -> URL? {

@@ -22,10 +22,12 @@ class ThemeBuilder {
     var toolbarDict : Dictionary<String, String> = [:]
     var rootDict : Dictionary<String, String> = [:]
     var tabsbarDict : Dictionary<String, String> = [:]
+    
     let fileThemeBuilder = FileThemeBuilder()
     
-    init() {
+    init(forPicker picker : NSComboBox) {
         
+        fileThemeBuilder.configurePicker(picker: picker)
         if let dictData = fileThemeBuilder.GetFileData() {
             
             BuildThemeDict(dictData: dictData)

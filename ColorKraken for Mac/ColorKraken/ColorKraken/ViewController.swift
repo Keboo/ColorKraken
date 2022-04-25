@@ -13,9 +13,8 @@ class ViewController: NSViewController {
     
     @IBOutlet weak var outlineView: NSOutlineView!
     @IBOutlet weak var containerView: NSView!
-    
-    // MARK: - Properties
-    var themeBuilder : ThemeBuilder
+    @IBOutlet weak var fileThemePicker: NSComboBox!
+    var themeBuilder : ThemeBuilder? = nil
     var viewModel = ViewModel()
     var curThemeName : String? = nil
     
@@ -32,17 +31,16 @@ class ViewController: NSViewController {
         return view
     }()
     
-    
     // MARK: - VC Lifecycle
     
     required init?(coder: NSCoder) {
-        self.themeBuilder = ThemeBuilder()
         super.init(coder: coder)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.themeBuilder = ThemeBuilder(forPicker: fileThemePicker)
         outlineView.dataSource = self
         outlineView.delegate = self
         
@@ -50,9 +48,12 @@ class ViewController: NSViewController {
     }
     
     func createDefaultTheme() {
-        loadDict(withTitle: "Root Itens", dictionary: self.themeBuilder.rootDict, colorType: .root)
-        loadDict(withTitle: "ToolBar Itens", dictionary: self.themeBuilder.toolbarDict, colorType: .toolbar)
-        loadDict(withTitle: "Tabsbar Itens", dictionary: self.themeBuilder.tabsbarDict, colorType: .tabsbar)
+        
+        if let themeBuilder = themeBuilder {
+            loadDict(withTitle: "Root Itens", dictionary: themeBuilder.rootDict, colorType: .root)
+            loadDict(withTitle: "ToolBar Itens", dictionary: themeBuilder.toolbarDict, colorType: .toolbar)
+            loadDict(withTitle: "Tabsbar Itens", dictionary: themeBuilder.tabsbarDict, colorType: .tabsbar)
+        }
     }
     
     // MARK: - Dictionary/File manipulation
@@ -111,11 +112,14 @@ class ViewController: NSViewController {
     @IBAction func saveTheme(_ sender: Any) {
         
         if self.curThemeName == nil || self.curThemeName == "" {
+            
             createTheme((Any).self)
-        } else {
-            self.themeBuilder.metaDict?.updateValue(self.curThemeName ?? "defaultName", forKey: "name")
-            self.themeBuilder.saveCurrentDictData()
-            self.themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName")
+            
+        } else if let themeBuilder = self.themeBuilder {
+            
+            themeBuilder.metaDict?.updateValue(self.curThemeName ?? "defaultName", forKey: "name")
+            themeBuilder.saveCurrentDictData()
+            themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName")
         }
     }
     
@@ -168,11 +172,13 @@ class ViewController: NSViewController {
 // MARK: - ColorDetailsViewDelegate
 extension ViewController: ColorDetailsViewDelegate {
     func shouldUpdateColor(withRed red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        
         if let color = outlineView.item(atRow: outlineView.selectedRow) as? Color {
+            
             color.colorWheelMode = true
             color.update(withRed: red, green: green, blue: blue, alpha: alpha)
             let colorType = getCollectionForSelectedItem()?.colorType ?? ColorType.none
-            self.themeBuilder.updateValue(forColor: color, forDictionaryType: colorType)
+            self.themeBuilder?.updateValue(forColor: color, forDictionaryType: colorType)
             outlineView.reloadItem(color)
         }
     }
@@ -192,7 +198,7 @@ extension ViewController: NSTextFieldDelegate {
         color.valueName = textFieldValue
         let colorType = getCollectionForSelectedItem()?.colorType ?? ColorType.none
         color.colorWheelMode = false
-        self.themeBuilder.updateValue(forColor: color, forDictionaryType: colorType)
+        self.themeBuilder?.updateValue(forColor: color, forDictionaryType: colorType)
         
         return true
     }
