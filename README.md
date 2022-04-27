@@ -1,7 +1,13 @@
 # ColorKraken
 
-A simple WPF application for editing GitKraken themes.
+
+
+A simple WPF application for editing [GitKraken](https://gitkraken.keboo.dev) themes.
+![gitkraken-logo-light-hz](https://user-images.githubusercontent.com/952248/165584032-96d5badb-3f9c-4a28-b118-014419c80d3e.svg)
+
+
 [GitKraken v8.2.0](https://support.gitkraken.com/release-notes/current/#version-820) introduced custom color themes. This simple desktop applications allows for easy editing of those themes. 
+
 
 ## Installation
 You can download pre-compiled versions of the application from the latest [Release](https://github.com/Keboo/ColorKraken/releases).
