@@ -17,6 +17,7 @@ class ViewController: NSViewController {
     var themeBuilder : ThemeBuilder? = nil
     var viewModel = ViewModel()
     var curThemeName : String? = nil
+    var newFile = false
     
     lazy var colorDetailsView: ColorDetailsView = {
         let view = ColorDetailsView()
@@ -99,7 +100,10 @@ class ViewController: NSViewController {
         
         let comboBox = sender as? NSComboBox
         let selectedItem = comboBox?.objectValueOfSelectedItem
+        
         if ((self.themeBuilder?.setDataForSelectedItem(selectedItem: selectedItem)) != nil) {
+            
+            self.viewModel = ViewModel()            
             loadTheme()
         }
         print("Selected theme: \(String(describing: selectedItem))")
@@ -118,8 +122,16 @@ class ViewController: NSViewController {
         textBox.frame.size = CGSize(width: alertController.window.frame.size.width - 20, height: 20)
         
         if alertController.runModal() == .alertSecondButtonReturn {
+            
             self.curThemeName = textBox.stringValue
             print("creating file: \(self.curThemeName ?? "not found")")
+            newFile = true
+            if self.fileThemePicker.numberOfItems != 0 {
+                
+                self.fileThemePicker.deselectItem(at: self.fileThemePicker.indexOfSelectedItem)
+                themeBuilder?.buildData(forceDefault: true)
+                loadTheme()
+            }
         }
     }
     
@@ -133,7 +145,9 @@ class ViewController: NSViewController {
             
             themeBuilder.metaDict?.updateValue(self.curThemeName ?? "defaultName", forKey: "name")
             themeBuilder.saveCurrentDictData()
-            themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName", newFile: self.fileThemePicker.numberOfItems == 0)
+            let isNewFile = self.fileThemePicker.numberOfItems == 0 || newFile == true
+            themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName", newFile: isNewFile)
+            newFile = false
         }
     }
     

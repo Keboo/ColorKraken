@@ -28,7 +28,13 @@ class ThemeBuilder {
     init(withPicker picker : NSComboBox) {
         
         fileThemeBuilder.configurePicker(picker: picker)
-        if let dictData = fileThemeBuilder.GetFileData() {
+        buildData()
+        
+    }
+    
+    func buildData(forceDefault : Bool = false) {
+        
+        if let dictData = fileThemeBuilder.GetFileData(forUrl: nil, forceDefaultData: forceDefault) {
             
             BuildThemeDict(dictData: dictData)
             print("all 3 dictionaries built succesfully")
@@ -100,7 +106,7 @@ class ThemeBuilder {
         
         if theJSONData != nil && pathWithFileName != nil {
             do {
-                try theJSONData!.write(to: pathWithFileName!)
+                try theJSONData!.write(to: pathWithFileName!)                
             } catch {
                 print(error)
             }

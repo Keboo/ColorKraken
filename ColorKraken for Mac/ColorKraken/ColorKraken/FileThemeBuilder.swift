@@ -14,13 +14,20 @@ class FileThemeBuilder {
     var fileThemePicker: NSComboBox? = nil
     var customThemes : [URL] = []
     
-    func GetFileData(forUrl url: URL? = nil) -> Dictionary<String, Any>? {
+    func GetFileData(forUrl url: URL? = nil, forceDefaultData : Bool = false) -> Dictionary<String, Any>? {
         
         var fileData : Dictionary<String, Any>? = nil
+        var fileURL : URL? = nil
         
-        if let fileURL = url ?? GetCustomThemesURL() ?? GetDefaultThemeFileUrl() {
+        if forceDefaultData {
+            fileURL = GetDefaultThemeFileUrl()
+        } else {
+            fileURL = url ?? GetCustomThemesURL() ?? GetDefaultThemeFileUrl()
+        }
+        
+        if fileURL != nil {
             
-            let dataStr = try? String(contentsOf: fileURL)
+            let dataStr = try? String(contentsOf: fileURL!)
             
             do {
                 fileData = try JSONSerialization.jsonObject(with: (dataStr!.data(using: .utf8))!, options:  [.json5Allowed, .fragmentsAllowed]) as? Dictionary<String, Any>
