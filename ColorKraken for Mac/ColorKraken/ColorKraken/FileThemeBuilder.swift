@@ -12,19 +12,20 @@ class FileThemeBuilder {
     
     let fileManager = FileManager.default
     var fileThemePicker: NSComboBox? = nil
+    var customThemes : [URL] = []
     
-    func GetFileData() -> Dictionary<String, Any>? {
+    func GetFileData(forUrl url: URL? = nil) -> Dictionary<String, Any>? {
         
         var fileData : Dictionary<String, Any>? = nil
         
-        if let fileURL = GetCustomThemesURL() ?? GetDefaultThemeFileUrl() {
+        if let fileURL = url ?? GetCustomThemesURL() ?? GetDefaultThemeFileUrl() {
             
             let dataStr = try? String(contentsOf: fileURL)
             
             do {
                 fileData = try JSONSerialization.jsonObject(with: (dataStr!.data(using: .utf8))!, options:  [.json5Allowed, .fragmentsAllowed]) as? Dictionary<String, Any>
                 
-                print("valid")
+                print("valid File Url")
             } catch {
                 print(error)
             }
@@ -38,14 +39,12 @@ class FileThemeBuilder {
     func GetCustomThemesURL() -> URL? {
         let filePath = getGKDefaultThemePath()
         let customThemeExtension = ".jsonc"
-        var customThemes : [URL] = []
         
         do {
             let items = try fileManager.contentsOfDirectory(atPath: filePath!.path)
             let urls = items.filter({$0.containsExtension(word: customThemeExtension)})
             
             for file in urls {
-                //customThemes = [URL]()
                 customThemes.append((getGKDefaultThemePath()?.appendingPathComponent(file))!)
             }
             
@@ -77,6 +76,12 @@ class FileThemeBuilder {
         self.fileThemePicker?.addItems(withObjectValues: customThemes)
         self.fileThemePicker?.selectItem(withObjectValue: customThemes.first)
     }
+    
+//    func selectPickerTheme(theme: Any) {
+//        if let themeUrl = theme as? URL {
+//            
+//        }
+//    }
     
     func GetDefaultThemeFileUrl() -> URL? {
         

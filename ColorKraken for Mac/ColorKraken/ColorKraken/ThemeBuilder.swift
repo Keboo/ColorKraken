@@ -25,7 +25,7 @@ class ThemeBuilder {
     
     let fileThemeBuilder = FileThemeBuilder()
     
-    init(forPicker picker : NSComboBox) {
+    init(withPicker picker : NSComboBox) {
         
         fileThemeBuilder.configurePicker(picker: picker)
         if let dictData = fileThemeBuilder.GetFileData() {
@@ -35,6 +35,16 @@ class ThemeBuilder {
         } else {
             print("Failed Getting Dictionary from GK default Json")
         }
+    }
+    
+    func setDataForSelectedItem(selectedItem : Any?) -> Bool {
+        
+        if let themeUrl = selectedItem as? URL, let dictData = fileThemeBuilder.GetFileData(forUrl: themeUrl) {
+            BuildThemeDict(dictData: dictData)
+            return true
+        }
+        
+        return false
     }
     
     private func BuildThemeDict(dictData : Dictionary<String, Any>) {
@@ -76,15 +86,21 @@ class ThemeBuilder {
         self.dictData?.updateValue(self.themeValuesDict!, forKey: self.themeKey)
     }
     
-    func saveDataToFile(withFile fileName: String) {
+    func saveDataToFile(withFile fileName: String, newFile : Bool = true) {
         
         let theJSONData = try? JSONSerialization.data(withJSONObject: self.dictData!,options: [.fragmentsAllowed, .prettyPrinted, .sortedKeys, .withoutEscapingSlashes])
         
-        if theJSONData != nil, let documentDirectory = fileThemeBuilder.getGKDefaultThemePath() {
-            let pathWithFileName = documentDirectory.appendingPathComponent("\(fileName).jsonc")
-            
+        var pathWithFileName : URL? = nil
+        
+        if newFile, let documentDirectory = fileThemeBuilder.getGKDefaultThemePath() {
+            pathWithFileName = documentDirectory.appendingPathComponent("\(fileName).jsonc")
+        } else {
+            pathWithFileName = URL.init(string: fileName)
+        }
+        
+        if theJSONData != nil && pathWithFileName != nil {
             do {
-                try theJSONData!.write(to: pathWithFileName)
+                try theJSONData!.write(to: pathWithFileName!)
             } catch {
                 print(error)
             }
@@ -97,17 +113,17 @@ class ThemeBuilder {
         
         switch type {
             
-            case .root:
-                self.rootDict.updateValue(value, forKey: color.keyName)
-                
-            case .tabsbar:
-                self.tabsbarDict.updateValue(value, forKey: color.keyName)
-                
-            case .toolbar:
-                self.toolbarDict.updateValue(value, forKey: color.keyName)
-                
-            default:
-                print("dictionary type: \(type) could not be updated")
+        case .root:
+            self.rootDict.updateValue(value, forKey: color.keyName)
+            
+        case .tabsbar:
+            self.tabsbarDict.updateValue(value, forKey: color.keyName)
+            
+        case .toolbar:
+            self.toolbarDict.updateValue(value, forKey: color.keyName)
+            
+        default:
+            print("dictionary type: \(type) could not be updated")
         }
     }
 }

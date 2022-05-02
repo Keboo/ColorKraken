@@ -40,14 +40,18 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.themeBuilder = ThemeBuilder(forPicker: fileThemePicker)
+        self.themeBuilder = ThemeBuilder(withPicker: fileThemePicker)
         outlineView.dataSource = self
         outlineView.delegate = self
         
-        createDefaultTheme()
+        loadTheme()
+        
+        if fileThemePicker.numberOfItems != 0, let themeUrl = self.fileThemePicker.objectValueOfSelectedItem as? URL {
+            self.curThemeName = themeUrl.absoluteString            
+        }
     }
     
-    func createDefaultTheme() {
+    func loadTheme() {
         
         if let themeBuilder = themeBuilder {
             loadDict(withTitle: "Root Itens", dictionary: themeBuilder.rootDict, colorType: .root)
@@ -93,7 +97,12 @@ class ViewController: NSViewController {
     
     @IBAction func selectTheme(_ sender: Any) {
         
-         print("Selected......")
+        let comboBox = sender as? NSComboBox
+        let selectedItem = comboBox?.objectValueOfSelectedItem
+        if ((self.themeBuilder?.setDataForSelectedItem(selectedItem: selectedItem)) != nil) {
+            loadTheme()
+        }
+        print("Selected theme: \(String(describing: selectedItem))")
     }
     
     @IBAction func createTheme(_ sender: Any) {
@@ -116,7 +125,7 @@ class ViewController: NSViewController {
     
     @IBAction func saveTheme(_ sender: Any) {
         
-        if self.curThemeName == nil || self.curThemeName == "" {
+        if self.curThemeName == nil || self.curThemeName == "" || self.fileThemePicker.numberOfItems == 0 {
             
             createTheme((Any).self)
             
@@ -124,7 +133,7 @@ class ViewController: NSViewController {
             
             themeBuilder.metaDict?.updateValue(self.curThemeName ?? "defaultName", forKey: "name")
             themeBuilder.saveCurrentDictData()
-            themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName")
+            themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName", newFile: self.fileThemePicker.numberOfItems == 0)
         }
     }
     
