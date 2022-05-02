@@ -46,6 +46,7 @@ class FileThemeBuilder {
     func GetCustomThemesURL() -> URL? {
         let filePath = getGKDefaultThemePath()
         let customThemeExtension = ".jsonc"
+        customThemes.removeAll()
         
         do {
             let items = try fileManager.contentsOfDirectory(atPath: filePath!.path)
