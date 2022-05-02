@@ -22,17 +22,35 @@ class ThemeBuilder {
     var toolbarDict : Dictionary<String, String> = [:]
     var rootDict : Dictionary<String, String> = [:]
     var tabsbarDict : Dictionary<String, String> = [:]
+    
     let fileThemeBuilder = FileThemeBuilder()
     
-    init() {
+    init(withPicker picker : NSComboBox) {
         
-        if let dictData = fileThemeBuilder.GetFileData() {
+        fileThemeBuilder.configurePicker(picker: picker)
+        buildData()
+        
+    }
+    
+    func buildData(forceDefault : Bool = false) {
+        
+        if let dictData = fileThemeBuilder.GetFileData(forUrl: nil, forceDefaultData: forceDefault) {
             
             BuildThemeDict(dictData: dictData)
             print("all 3 dictionaries built succesfully")
         } else {
-            print("Failed Getting Dictionary from Json")
+            print("Failed Getting Dictionary from GK default Json")
         }
+    }
+    
+    func setDataForSelectedItem(selectedItem : Any?) -> Bool {
+        
+        if let themeUrl = selectedItem as? URL, let dictData = fileThemeBuilder.GetFileData(forUrl: themeUrl) {
+            BuildThemeDict(dictData: dictData)
+            return true
+        }
+        
+        return false
     }
     
     private func BuildThemeDict(dictData : Dictionary<String, Any>) {
@@ -48,7 +66,7 @@ class ThemeBuilder {
             rootDict = themeValuesDict[rootKey] as! Dictionary<String, String>
             tabsbarDict = themeValuesDict[tabsbarKey] as! Dictionary<String, String>
         } else {
-            print("Failed Getting Themecomponents from dictioary")
+            print("Failed Getting Theme components from dictioary")
         }
     }
     
@@ -74,15 +92,21 @@ class ThemeBuilder {
         self.dictData?.updateValue(self.themeValuesDict!, forKey: self.themeKey)
     }
     
-    func saveDataToFile(withFile fileName: String) {
+    func saveDataToFile(withFile fileName: String, newFile : Bool = true) {
         
         let theJSONData = try? JSONSerialization.data(withJSONObject: self.dictData!,options: [.fragmentsAllowed, .prettyPrinted, .sortedKeys, .withoutEscapingSlashes])
         
-        if theJSONData != nil, let documentDirectory = fileThemeBuilder.getGKDefaultThemePath() {
-            let pathWithFileName = documentDirectory.appendingPathComponent("\(fileName).jsonc")
-            
+        var pathWithFileName : URL? = nil
+        
+        if newFile, let documentDirectory = fileThemeBuilder.getGKDefaultThemePath() {
+            pathWithFileName = documentDirectory.appendingPathComponent("\(fileName).jsonc")
+        } else {
+            pathWithFileName = URL.init(string: fileName)
+        }
+        
+        if theJSONData != nil && pathWithFileName != nil {
             do {
-                try theJSONData!.write(to: pathWithFileName)
+                try theJSONData!.write(to: pathWithFileName!)                
             } catch {
                 print(error)
             }

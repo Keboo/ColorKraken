@@ -11,20 +11,28 @@ import AppKit
 class FileThemeBuilder {
     
     let fileManager = FileManager.default
-    @IBOutlet weak var fileThemePicker: NSComboBox!
+    var fileThemePicker: NSComboBox? = nil
+    var customThemes : [URL] = []
     
-    func GetFileData() -> Dictionary<String, Any>? {
+    func GetFileData(forUrl url: URL? = nil, forceDefaultData : Bool = false) -> Dictionary<String, Any>? {
         
         var fileData : Dictionary<String, Any>? = nil
+        var fileURL : URL? = nil
         
-        if let fileURL = GetDefaultThemeFileUrl() {
+        if forceDefaultData {
+            fileURL = GetDefaultThemeFileUrl()
+        } else {
+            fileURL = url ?? GetCustomThemesURL() ?? GetDefaultThemeFileUrl()
+        }
+        
+        if fileURL != nil {
             
-            let dataStr = try? String(contentsOf: fileURL)
+            let dataStr = try? String(contentsOf: fileURL!)
             
             do {
                 fileData = try JSONSerialization.jsonObject(with: (dataStr!.data(using: .utf8))!, options:  [.json5Allowed, .fragmentsAllowed]) as? Dictionary<String, Any>
                 
-                print("valid")
+                print("valid File Url")
             } catch {
                 print(error)
             }
@@ -35,12 +43,60 @@ class FileThemeBuilder {
         return fileData
     }
     
+    func GetCustomThemesURL() -> URL? {
+        let filePath = getGKDefaultThemePath()
+        let customThemeExtension = ".jsonc"
+        customThemes.removeAll()
+        
+        do {
+            let items = try fileManager.contentsOfDirectory(atPath: filePath!.path)
+            let urls = items.filter({$0.containsExtension(word: customThemeExtension)})
+            
+            for file in urls {
+                customThemes.append((getGKDefaultThemePath()?.appendingPathComponent(file))!)
+            }
+            
+        } catch {
+            // failed to read directory – bad permissions, perhaps?
+            // TODO:  show this alert to the user
+            print("Custom File URLs Not Found, or Directory doesn't have permissions")
+        }
+        
+        if !customThemes.isEmpty {
+            populatePickerWithCustomThemes(customThemes: customThemes)
+            return customThemes.first
+        }
+        
+        return nil
+    }
+    
+    func configurePicker(picker : NSComboBox) {
+        
+        self.fileThemePicker = picker
+        self.fileThemePicker?.removeAllItems()
+        self.fileThemePicker?.isEditable = false
+        self.fileThemePicker?.isEnabled = true
+        self.fileThemePicker?.hasVerticalScroller = true
+    }
+    
+    func populatePickerWithCustomThemes(customThemes : [URL]) {
+        
+        self.fileThemePicker?.addItems(withObjectValues: customThemes)
+        self.fileThemePicker?.selectItem(withObjectValue: customThemes.first)
+    }
+    
+//    func selectPickerTheme(theme: Any) {
+//        if let themeUrl = theme as? URL {
+//            
+//        }
+//    }
+    
     func GetDefaultThemeFileUrl() -> URL? {
         
         var filePath = getGKDefaultThemePath()
         let defaultFileExtension = ".jsonc-default"
         var fileName = isDarkMode() ? "dark" : "light"
-        fileName += defaultFileExtension        
+        fileName += defaultFileExtension
         
         do {
             let items = try fileManager.contentsOfDirectory(atPath: filePath!.path)
@@ -81,5 +137,12 @@ class FileThemeBuilder {
         } else {
             return true
         }
+    }
+}
+
+extension String {
+    func containsExtension(word : String) -> Bool
+    {
+        return self.range(of: "\(word)$", options: .regularExpression) != nil
     }
 }

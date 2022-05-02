@@ -13,12 +13,11 @@ class ViewController: NSViewController {
     
     @IBOutlet weak var outlineView: NSOutlineView!
     @IBOutlet weak var containerView: NSView!
-    
-    
-    // MARK: - Properties
-    var themeBuilder : ThemeBuilder
+    @IBOutlet weak var fileThemePicker: NSComboBox!
+    var themeBuilder : ThemeBuilder? = nil
     var viewModel = ViewModel()
     var curThemeName : String? = nil
+    var newFile = false
     
     lazy var colorDetailsView: ColorDetailsView = {
         let view = ColorDetailsView()
@@ -33,28 +32,33 @@ class ViewController: NSViewController {
         return view
     }()
     
-    
     // MARK: - VC Lifecycle
     
     required init?(coder: NSCoder) {
-        self.themeBuilder = ThemeBuilder()
         super.init(coder: coder)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        self.themeBuilder = ThemeBuilder(withPicker: fileThemePicker)
         outlineView.dataSource = self
         outlineView.delegate = self
         
-        createDefaultTheme()
+        loadTheme()
+        
+        if fileThemePicker.numberOfItems != 0, let themeUrl = self.fileThemePicker.objectValueOfSelectedItem as? URL {
+            self.curThemeName = themeUrl.absoluteString            
+        }
     }
     
-    func createDefaultTheme() {
-        loadDict(withTitle: "Root Itens", dictionary: self.themeBuilder.rootDict, colorType: .root)
-        loadDict(withTitle: "ToolBar Itens", dictionary: self.themeBuilder.toolbarDict, colorType: .toolbar)
-        loadDict(withTitle: "Tabsbar Itens", dictionary: self.themeBuilder.tabsbarDict, colorType: .tabsbar)
+    func loadTheme() {
+        
+        if let themeBuilder = themeBuilder {
+            loadDict(withTitle: "Root Itens", dictionary: themeBuilder.rootDict, colorType: .root)
+            loadDict(withTitle: "ToolBar Itens", dictionary: themeBuilder.toolbarDict, colorType: .toolbar)
+            loadDict(withTitle: "Tabsbar Itens", dictionary: themeBuilder.tabsbarDict, colorType: .tabsbar)
+        }
     }
     
     // MARK: - Dictionary/File manipulation
@@ -92,6 +96,19 @@ class ViewController: NSViewController {
     
     // MARK: - IBAction Methods
     
+    @IBAction func selectTheme(_ sender: Any) {
+        
+        let comboBox = sender as? NSComboBox
+        let selectedItem = comboBox?.objectValueOfSelectedItem
+        
+        if ((self.themeBuilder?.setDataForSelectedItem(selectedItem: selectedItem)) != nil) {
+            
+            self.viewModel = ViewModel()            
+            loadTheme()
+        }
+        print("Selected theme: \(String(describing: selectedItem))")
+    }
+    
     @IBAction func createTheme(_ sender: Any) {
         
         let alertController = NSAlert()
@@ -105,25 +122,38 @@ class ViewController: NSViewController {
         textBox.frame.size = CGSize(width: alertController.window.frame.size.width - 20, height: 20)
         
         if alertController.runModal() == .alertSecondButtonReturn {
+            
             self.curThemeName = textBox.stringValue
             print("creating file: \(self.curThemeName ?? "not found")")
+            newFile = true
+            if self.fileThemePicker.numberOfItems != 0 {
+                
+                self.fileThemePicker.deselectItem(at: self.fileThemePicker.indexOfSelectedItem)
+                themeBuilder?.buildData(forceDefault: true)
+                loadTheme()
+            }
         }
     }
     
     @IBAction func saveTheme(_ sender: Any) {
         
-        if self.curThemeName == nil || self.curThemeName == "" {
+        if self.curThemeName == nil || self.curThemeName == "" || self.fileThemePicker.numberOfItems == 0 {
+            
             createTheme((Any).self)
-        } else {
-            self.themeBuilder.metaDict?.updateValue(self.curThemeName ?? "defaultName", forKey: "name")
-            self.themeBuilder.saveCurrentDictData()
-            self.themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName")
+            
+        } else if let themeBuilder = self.themeBuilder {
+            
+            themeBuilder.metaDict?.updateValue(self.curThemeName ?? "defaultName", forKey: "name")
+            themeBuilder.saveCurrentDictData()
+            let isNewFile = self.fileThemePicker.numberOfItems == 0 || newFile == true
+            themeBuilder.saveDataToFile(withFile: self.curThemeName ?? "defaultName", newFile: isNewFile)
+            newFile = false
         }
     }
     
     @IBAction func removeItem(_ sender: Any) {
         
-        // TODO:  this might come in handy if it turns out GK accepts partial json
+        // TODO: this might come in handy if it turns out GK accepts partial json and user wants delete items they dont care about
         if false {
             let selectedRow = outlineView.selectedRow
             var result = false
@@ -170,11 +200,13 @@ class ViewController: NSViewController {
 // MARK: - ColorDetailsViewDelegate
 extension ViewController: ColorDetailsViewDelegate {
     func shouldUpdateColor(withRed red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        
         if let color = outlineView.item(atRow: outlineView.selectedRow) as? Color {
+            
             color.colorWheelMode = true
             color.update(withRed: red, green: green, blue: blue, alpha: alpha)
             let colorType = getCollectionForSelectedItem()?.colorType ?? ColorType.none
-            self.themeBuilder.updateValue(forColor: color, forDictionaryType: colorType)
+            self.themeBuilder?.updateValue(forColor: color, forDictionaryType: colorType)
             outlineView.reloadItem(color)
         }
     }
@@ -194,7 +226,7 @@ extension ViewController: NSTextFieldDelegate {
         color.valueName = textFieldValue
         let colorType = getCollectionForSelectedItem()?.colorType ?? ColorType.none
         color.colorWheelMode = false
-        self.themeBuilder.updateValue(forColor: color, forDictionaryType: colorType)
+        self.themeBuilder?.updateValue(forColor: color, forDictionaryType: colorType)
         
         return true
     }
@@ -240,7 +272,7 @@ extension ViewController: NSOutlineViewDelegate {
                 cell.textField?.stringValue = color.keyName
                 cell.textField?.isEditable = false
                 cell.textField?.wantsLayer = true
-                cell.textField?.layer?.backgroundColor = .clear//color.toNSColor().cgColor
+                cell.textField?.layer?.backgroundColor = .clear
                 cell.textField?.layer?.cornerRadius = 5.0
             }
             return cell
@@ -257,7 +289,7 @@ extension ViewController: NSOutlineViewDelegate {
                     cell.textField?.stringValue = color.rgbaDescription
                     color.colorWheelMode = false
                 } else {
-                    cell.textField?.stringValue = color.valueName//color.description
+                    cell.textField?.stringValue = color.valueName
                 }
                 cell.textField?.isEditable = true
                 cell.textField?.delegate = self

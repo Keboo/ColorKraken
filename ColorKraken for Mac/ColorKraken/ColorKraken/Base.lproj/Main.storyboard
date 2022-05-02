@@ -772,6 +772,9 @@
                                                     <string>Item 3</string>
                                                 </objectValues>
                                             </comboBoxCell>
+                                            <connections>
+                                                <action selector="selectTheme:" target="XfG-lQ-9wD" id="fK6-vN-rOu"/>
+                                            </connections>
                                         </comboBox>
                                     </subviews>
                                     <constraints>
@@ -922,12 +925,10 @@
                             <constraint firstItem="Jn8-LH-gtG" firstAttribute="leading" secondItem="r7V-bb-ad0" secondAttribute="trailing" id="qJK-vn-5TU"/>
                             <constraint firstItem="r7V-bb-ad0" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="qV6-FO-F4P"/>
                         </constraints>
-                        <connections>
-                            <outlet property="fileThemePicker" destination="FAe-DZ-0mf" id="fMG-6V-uNH"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="containerView" destination="Jn8-LH-gtG" id="54v-v0-qTu"/>
+                        <outlet property="fileThemePicker" destination="FAe-DZ-0mf" id="4kF-N6-qMl"/>
                         <outlet property="outlineView" destination="Aok-lC-cXE" id="ir4-Js-uMA"/>
                     </connections>
                 </viewController>

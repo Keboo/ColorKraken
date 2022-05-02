@@ -13,13 +13,10 @@ class ViewModel {
     
     var model = Model()
     
-    
     // MARK: - Init
-    
     init() {
         
     }
-    
     
     // MARK: - Custom Methods
     
@@ -28,7 +25,7 @@ class ViewModel {
      parameter values has been provided, then add it as an item to that
      collection. Otherwise append it to the collections array of the `model`
      property as a top level collection.
-    */
+     */
     func createCollection(withTitle title: String, inCollection collection: Collection?) -> Collection {
         if let collection = collection {
             collection.items.append(Collection(withTitle: title, id: model.getCollectionID()))
@@ -40,10 +37,7 @@ class ViewModel {
         }
     }
     
-    
-    /**
-     Create a new color and add it as an item to the given collection.
-    */
+    /// Create a new color and add it as an item to the given collection.
     func addColor(to collection: Collection) -> Color {
         let newColor = Color(withID: model.getColorID())
         collection.items.append(newColor)
@@ -55,10 +49,9 @@ class ViewModel {
      It removes the given item from the collection if it has been
      specified, or it removes a collection from the top level
      collections in the model object.
-    */
+     */
     func remove<T>(item: T, from collection: Collection?) {
-        // If the collection parameter value is not nil then remove
-        // the given item from the specified collection.
+        // If the collection parameter value is not nil then remove the given item from the specified collection.
         if let collection = collection {
             collection.remove(item: item)
         } else {
@@ -69,7 +62,5 @@ class ViewModel {
                 model.collections.removeAll { $0 == item as! Collection }
             }
         }
-        
     }
-
 }

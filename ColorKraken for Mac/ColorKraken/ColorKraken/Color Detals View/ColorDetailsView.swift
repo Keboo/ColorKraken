@@ -12,13 +12,12 @@ protocol ColorDetailsViewDelegate {
     func shouldUpdateColor(withRed red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
 }
 
-
 class ColorDetailsView: NSView {
     
     // MARK: - IBOutlet Properties
     
     @IBOutlet weak var colorWell: NSColorWell!
-
+    
     @IBOutlet weak var redLabel: NSTextField!
     
     @IBOutlet weak var greenLabel: NSTextField!
@@ -42,11 +41,9 @@ class ColorDetailsView: NSView {
         loadFromNib()
     }
     
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
     
     // MARK: - IBAction Methods
     
@@ -61,8 +58,6 @@ class ColorDetailsView: NSView {
                                     blue: colorWell.color.blueComponent,
                                     alpha: colorWell.color.alphaComponent)
     }
-    
-    
     
     // MARK: - Custom Methods
     
@@ -81,8 +76,6 @@ class ColorDetailsView: NSView {
         blueLabel.stringValue = String(format: "Blue: %.f", color.blue * 255)
         alphaLabel.stringValue = String(format: "Alpha: %.f", color.alpha)
     }
- 
-    
     
     // MARK: - Fileprivate Methods
     
