@@ -1,183 +1,249 @@
-﻿<Window x:Class="ColorKraken.MainWindow"
+<Window x:Class="ColorKraken.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ColorKraken" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:system="clr-namespace:System;assembly=netstandard"
+        xmlns:local="clr-namespace:ColorKraken"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:system="clr-namespace:System;assembly=netstandard"
         mc:Ignorable="d"
         Style="{StaticResource MaterialDesignWindow}"
         Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-        <DataTemplate DataType="{x:Type local:ColorPickerViewModel}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <materialDesign:ColorPicker Width="300" Height="200" Grid.ColumnSpan="2" Color="{Binding Color}"/>
+  <Window.Resources>
+    <DataTemplate DataType="{x:Type local:ColorPickerViewModel}">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <materialDesign:ColorPicker Width="300" Height="200" Grid.ColumnSpan="2" Color="{Binding Color}"/>
 
-                <TextBox Text="{Binding Color, Converter={StaticResource ColorStringConverter}}"
+        <TextBox Text="{Binding Color, Converter={StaticResource ColorStringConverter}}"
                  VerticalContentAlignment="Bottom"
                  Grid.Row="1" Margin="10,2,0,0"/>
-                <Button Content="_Apply" IsDefault="True" Grid.Row="1" Grid.Column="1"
+        <Button Content="_Apply" IsDefault="True" Grid.Row="1" Grid.Column="1"
                 Command="{Binding ApplyCommand}" VerticalAlignment="Bottom"/>
 
-            </Grid>
-        </DataTemplate>
+      </Grid>
+    </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:NewThemeViewModel}">
-            <Grid Margin="15">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+    <DataTemplate DataType="{x:Type local:NewThemeViewModel}">
+      <Grid Margin="15">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-                <TextBlock Text="Enter the name for the new theme" />
-                <TextBox Text="{Binding Name}" materialDesign:HintAssist.Hint="Name" Grid.Row="1" 
+        <TextBlock Text="Enter the name for the new theme" />
+        <TextBox Text="{Binding Name}" materialDesign:HintAssist.Hint="Name" Grid.Row="1" 
                  Margin="0,10"/>
 
-                <ComboBox materialDesign:HintAssist.Hint="Based on theme" 
+        <ComboBox materialDesign:HintAssist.Hint="Based on theme" 
                   ItemsSource="{Binding Themes}"
                   SelectedItem="{Binding SelectedTheme}"
                   Margin="0,5"
                   Grid.Row="2">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type local:Theme}">
-                            <TextBlock Text="{Binding Name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+          <ComboBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type local:Theme}">
+              <TextBlock Text="{Binding Name}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3" Margin="0,15,0,0">
-                    <Button Content="_OK" IsDefault="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3" Margin="0,15,0,0">
+          <Button Content="_OK" IsDefault="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                   Margin="0,0,10,0">
-                        <Button.CommandParameter>
-                            <system:Boolean>True</system:Boolean>
-                        </Button.CommandParameter>
-                    </Button>
-                    <Button Content="_Cancel" IsCancel="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" />
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
+            <Button.CommandParameter>
+              <system:Boolean>True</system:Boolean>
+            </Button.CommandParameter>
+          </Button>
+          <Button Content="_Cancel" IsCancel="True" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+        </StackPanel>
+      </Grid>
+    </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:ErrorDetailsViewModel}">
-            <Grid Margin="15">
+    <DataTemplate DataType="{x:Type local:ErrorDetailsViewModel}">
+      <Grid Margin="15">
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-                <TextBlock Text="{Binding Details}" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Details}" TextWrapping="Wrap" />
 
-                <Button Content="_OK" IsDefault="True" IsCancel="True" Grid.Row="1" HorizontalAlignment="Right"
+        <Button Content="_OK" IsDefault="True" IsCancel="True" Grid.Row="1" HorizontalAlignment="Right"
                 Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" />
-            </Grid>
-        </DataTemplate>
-    </Window.Resources>
-    <materialDesign:DialogHost Identifier="Root">
-    <Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition />
-      </Grid.RowDefinitions>
+      </Grid>
+    </DataTemplate>
+  </Window.Resources>
+  <materialDesign:DialogHost Identifier="Root">
+    <TabControl
+        x:Name="TabControl"
+        materialDesign:ColorZoneAssist.Mode="PrimaryDark"
+        Style="{StaticResource MaterialDesignNavigationRailTabControl}">
+      <TabItem x:Name="EditorTab" d:DataContext="{d:DesignInstance Type=local:EditorVieWModel}">
+        <TabItem.Header>
+          <StackPanel>
+            <materialDesign:PackIcon
+                Width="24"
+                Height="24"
+                HorizontalAlignment="Center"
+                Kind="Edit" />
+            <TextBlock HorizontalAlignment="Center" Text="Editor" TextWrapping="Wrap" />
+          </StackPanel>
+        </TabItem.Header>
 
-      <materialDesign:ColorZone Mode="PrimaryLight">
         <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto"/>
-          </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal">
-            <Button Content="{materialDesign:PackIcon Kind=FolderOpen}" 
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+          </Grid.RowDefinitions>
+
+          <materialDesign:ColorZone Mode="PrimaryLight">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <StackPanel Orientation="Horizontal">
+                <Button Content="{materialDesign:PackIcon Kind=FolderOpen}" 
                   Command="{Binding OpenThemeFolderCommand}"
                   ToolTip="Open theme folder"/>
 
-            <ComboBox ItemsSource="{Binding Themes}"
+                <ComboBox ItemsSource="{Binding Themes}"
                     SelectedItem="{Binding SelectedTheme}"
                     MinWidth="200" Margin="10,3">
-              <ComboBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:Theme}">
-                  <TextBlock Text="{Binding Name}" />
-                </DataTemplate>
-              </ComboBox.ItemTemplate>
-            </ComboBox>
-            <Button Content="_New" Command="{Binding NewThemeCommand}" 
-                VerticalAlignment="Center" />
-          </StackPanel>
-          <StackPanel Orientation="Horizontal" Grid.Column="1">
-            <Button Content="{materialDesign:PackIcon Kind=Delete}" Command="{Binding DeleteCommand}" 
-                    ToolTip="Delete current theme"/>
-            <Button Content="{materialDesign:PackIcon Kind=Refresh}" Command="{Binding RefreshCommand}" 
-                    ToolTip="Reload all themes" Margin="5,0"/>
-          </StackPanel>
-        </Grid>
-      </materialDesign:ColorZone>
-
-      <ScrollViewer Grid.Row="1">
-        <ScrollViewer.CommandBindings>
-          <CommandBinding Command="{x:Static ApplicationCommands.Undo}"
-                        Executed="Undo_Executed"/>
-        </ScrollViewer.CommandBindings>
-        <ItemsControl ItemsSource="{Binding ThemeCategories}" Grid.IsSharedSizeScope="True">
-          <ItemsControl.Style>
-            <Style TargetType="ItemsControl" BasedOn="{StaticResource {x:Type ItemsControl}}">
-              <Style.Triggers>
-                <DataTrigger Binding="{Binding SelectedTheme.IsDefault}" Value="True">
-                  <Setter Property="IsEnabled" Value="False" />
-                </DataTrigger>
-              </Style.Triggers>
-            </Style>
-          </ItemsControl.Style>
-
-          <ItemsControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type local:ThemeCategory}">
-              <GroupBox Header="{Binding Name}" HorizontalContentAlignment="Stretch" Margin="1,2">
-                <ItemsControl ItemsSource="{Binding Colors}">
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type local:ThemeColor}">
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition SharedSizeGroup="ColorName" Width="Auto" />
-                          <ColumnDefinition Width="Auto" />
-                          <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Name}" Margin="10,2"/>
-                        <materialDesign:PopupBox Grid.Column="1" StaysOpen="True">
-                          <materialDesign:PopupBox.ToggleContent>
-                            <materialDesign:PackIcon Kind="Eyedropper" Foreground="{DynamicResource MaterialDesignBody}" />
-                          </materialDesign:PopupBox.ToggleContent>
-                          <materialDesign:PopupBox.Style>
-                            <Style TargetType="materialDesign:PopupBox" BasedOn="{StaticResource {x:Type materialDesign:PopupBox}}">
-                              <Style.Triggers>
-                                <Trigger Property="IsPopupOpen" Value="True">
-                                  <Setter Property="PopupContent" Value="{Binding Converter={StaticResource PickerViewModelConverter}}" />
-                                </Trigger>
-                              </Style.Triggers>
-                            </Style>
-                          </materialDesign:PopupBox.Style>
-
-
-                        </materialDesign:PopupBox>
-                        <TextBox Text="{Binding Value}" Grid.Column="2"/>
-                      </Grid>
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:Theme}">
+                      <TextBlock Text="{Binding Name}" />
                     </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-              </GroupBox>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Content="_New" Command="{Binding NewThemeCommand}" 
+                VerticalAlignment="Center" />
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Grid.Column="1">
+                <Button Content="{materialDesign:PackIcon Kind=Delete}" Command="{Binding DeleteCommand}" 
+                    ToolTip="Delete current theme"/>
+                <Button Content="{materialDesign:PackIcon Kind=Refresh}" Command="{Binding RefreshCommand}" 
+                    ToolTip="Reload all themes" Margin="5,0"/>
+              </StackPanel>
+            </Grid>
+          </materialDesign:ColorZone>
+
+          <ScrollViewer Grid.Row="1">
+            <ScrollViewer.CommandBindings>
+              <CommandBinding Command="{x:Static ApplicationCommands.Undo}"
+                        Executed="Undo_Executed"/>
+            </ScrollViewer.CommandBindings>
+            <ItemsControl ItemsSource="{Binding ThemeCategories}" Grid.IsSharedSizeScope="True">
+              <ItemsControl.Style>
+                <Style TargetType="ItemsControl" BasedOn="{StaticResource {x:Type ItemsControl}}">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding SelectedTheme.IsDefault}" Value="True">
+                      <Setter Property="IsEnabled" Value="False" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </ItemsControl.Style>
+
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ThemeCategory}">
+                  <GroupBox Header="{Binding Name}" HorizontalContentAlignment="Stretch" Margin="3,4">
+                    <ItemsControl ItemsSource="{Binding Colors}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:ThemeColor}">
+                          <Grid>
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition SharedSizeGroup="ColorName" Width="Auto" />
+                              <ColumnDefinition Width="Auto" />
+                              <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Name}" Margin="10,2"/>
+                            <materialDesign:PopupBox Grid.Column="1" StaysOpen="True">
+                              <materialDesign:PopupBox.ToggleContent>
+                                <materialDesign:PackIcon Kind="Eyedropper" Foreground="{DynamicResource MaterialDesignBody}" />
+                              </materialDesign:PopupBox.ToggleContent>
+                              <materialDesign:PopupBox.Style>
+                                <Style TargetType="materialDesign:PopupBox" BasedOn="{StaticResource {x:Type materialDesign:PopupBox}}">
+                                  <Style.Triggers>
+                                    <Trigger Property="IsPopupOpen" Value="True">
+                                      <Setter Property="PopupContent" Value="{Binding Converter={StaticResource PickerViewModelConverter}}" />
+                                    </Trigger>
+                                  </Style.Triggers>
+                                </Style>
+                              </materialDesign:PopupBox.Style>
+
+
+                            </materialDesign:PopupBox>
+                            <TextBox Text="{Binding Value}" Grid.Column="2"/>
+                          </Grid>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </GroupBox>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+
+          <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}" Grid.Row="1" />
+
+        </Grid>
+      </TabItem>
+      <TabItem x:Name="DownloadTab" d:DataContext="{d:DesignInstance Type=local:DownloadViewModel}">
+        <TabItem.Header>
+          <StackPanel>
+            <materialDesign:PackIcon
+                Width="24"
+                Height="24"
+                HorizontalAlignment="Center"
+                Kind="Internet" />
+            <TextBlock HorizontalAlignment="Center" Text="Download" />
+          </StackPanel>
+        </TabItem.Header>
+
+        <ListBox ItemsSource="{Binding Items}" HorizontalContentAlignment="Stretch">
+          <ListBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type local:ThemeItem}">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="300" />
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition />
+                </Grid.RowDefinitions>
+                <Image Source="{Binding PreviewImage}" 
+                       Grid.RowSpan="3" Margin="0,0,20,0" />
+                <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="DemiBold" 
+                           Grid.Column="1" Grid.Row="0" />
+                <TextBlock Text="{Binding Author, StringFormat='by {0}'}" 
+                           Grid.Column="1" Grid.Row="1" />
+                <TextBlock Text="{Binding Description}"
+                           Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" />
+
+                <Button Style="{StaticResource MaterialDesignOutlinedSecondaryLightButton}" 
+                        Grid.Column="2" Grid.RowSpan="3" VerticalAlignment="Center" 
+                        Height="NaN" ToolTip="Download theme"
+                        Command="{Binding DataContext.DownloadCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding Path=.}">
+                    <materialDesign:PackIcon Kind="Download" Height="40" Width="40" />
+                </Button>
+              </Grid>
             </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-      </ScrollViewer>
-
-      <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}" Grid.Row="1" />
-
-    </Grid>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </TabItem>
+    </TabControl>
   </materialDesign:DialogHost>
 </Window>

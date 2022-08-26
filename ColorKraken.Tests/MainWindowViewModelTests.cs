@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Moq;
 using Moq.AutoMock;
-using Moq.Language.Flow;
 
 using Xunit;
 
@@ -26,7 +24,7 @@ public class MainWindowViewModelTests
         Mock<IThemeManager> themeManager = mocker.GetMock<IThemeManager>();
         themeManager.Setup(x => x.GetThemes())
             .ReturnsAsyncEnumerable(new Theme("", ""));
-        MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+        EditorViewModel vm = mocker.CreateInstance<EditorViewModel>();
 
         vm.SelectedTheme = new Theme("test", "C:\\fakepath.jsonc");
 
@@ -34,7 +32,7 @@ public class MainWindowViewModelTests
         vm.PropertyChanged += OnPropertyChanged;
         void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MainWindowViewModel.SelectedTheme))
+            if (e.PropertyName == nameof(EditorViewModel.SelectedTheme))
             {
                 propertyValues.Add(vm.SelectedTheme);
             }
@@ -60,14 +58,14 @@ public class MainWindowViewModelTests
         themeManager.Setup(x => x.GetThemes())
             .ReturnsAsyncEnumerable(new Theme("", ""));
 
-        MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+        EditorViewModel vm = mocker.CreateInstance<EditorViewModel>();
 
         CancellationTokenSource cts = new();
         TaskCompletionSource tcs = new();
         vm.PropertyChanged += OnPropertyChanged;
         void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MainWindowViewModel.SelectedTheme)
+            if (e.PropertyName == nameof(EditorViewModel.SelectedTheme)
                 && vm.SelectedTheme is not null)
             {
                 tcs.TrySetResult();
@@ -92,7 +90,7 @@ public class MainWindowViewModelTests
         //Arrange
         AutoMocker mocker = new();
         Mock<IThemeManager> themeManagerMock = mocker.GetMock<IThemeManager>();
-        MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+        EditorViewModel vm = mocker.CreateInstance<EditorViewModel>();
 
         //Act
         vm.OpenThemeFolderCommand.Execute(null);
@@ -114,7 +112,7 @@ public class MainWindowViewModelTests
 
         Mock<IThemeManager> themeManager = mocker.GetMock<IThemeManager>();
         themeManager.Setup(x => x.SaveTheme(selectedTheme, It.IsAny<IEnumerable<ThemeCategory>>()));
-        MainWindowViewModel vm = mocker.CreateInstance<MainWindowViewModel>();
+        EditorViewModel vm = mocker.CreateInstance<EditorViewModel>();
 
         vm.SelectedTheme = selectedTheme;
         var color = new ThemeColor("Testcolor", messenger) { Value = "new" };

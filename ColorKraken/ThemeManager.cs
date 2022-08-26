@@ -6,6 +6,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
+using MaterialDesignThemes.Wpf;
+
 namespace ColorKraken;
 
 public interface IThemeManager
@@ -13,6 +15,7 @@ public interface IThemeManager
     IAsyncEnumerable<Theme> GetThemes();
     IAsyncEnumerable<ThemeCategory> GetCategories(Theme theme);
     Task<Theme> CreateTheme(string name, Theme baseTheme);
+    Task CreateTheme(string name, Stream themeData);
     Task SaveTheme(Theme theme, IEnumerable<ThemeCategory> themeCategories);
     void OpenThemeDirectory();
     Task DeleteTheme(Theme theme);
@@ -54,14 +57,7 @@ public class ThemeManager : IThemeManager
 
     public async Task<Theme> CreateTheme(string name, Theme baseTheme)
     {
-        string filePath = name;
-        foreach (var c in Path.GetInvalidFileNameChars())
-        {
-            filePath = filePath.Replace(c, '_');
-        }
-
-        filePath += ".jsonc";
-        filePath = Path.Combine(GetThemesDirectoryPath(), filePath);
+        string filePath = GetThemeFilePath(name);
 
         //TODO: Make sure new name does not already exist.
         //TODO: Make sure new does not math source.
@@ -80,6 +76,19 @@ public class ThemeManager : IThemeManager
             meta["name"] = name;
         });
         return theme;
+    }
+
+    private static string GetThemeFilePath(string name)
+    {
+        string filePath = name;
+        foreach (var c in Path.GetInvalidFileNameChars())
+        {
+            filePath = filePath.Replace(c, '_');
+        }
+
+        filePath += ".jsonc";
+        filePath = Path.Combine(GetThemesDirectoryPath(), filePath);
+        return filePath;
     }
 
     public async IAsyncEnumerable<Theme> GetThemes()
@@ -197,5 +206,13 @@ public class ThemeManager : IThemeManager
             return new Theme(nameValue.GetValue<string>(), filePath);
         }
         return null;
+    }
+
+    public async Task CreateTheme(string name, Stream themeData)
+    {
+        string filePath = GetThemeFilePath(name);
+        //TODO: Check for existing file
+        using Stream writeStream = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+        await themeData.CopyToAsync(writeStream);
     }
 }

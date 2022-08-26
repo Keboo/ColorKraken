@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ColorKraken;
 
@@ -17,7 +17,7 @@ public class NewThemeViewModel : ObservableObject
     }
 
     private string? _name;
-    public string Name
+    public string? Name
     {
         get => _name;
         set => SetProperty(ref _name, value);

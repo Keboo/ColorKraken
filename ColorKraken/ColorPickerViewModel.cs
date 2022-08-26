@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Media;
 
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ColorKraken;
 
@@ -12,7 +13,7 @@ public class ColorPickerViewModel : ObservableObject
     TypeDescriptor.GetConverter(typeof(Color));
 
     private Color? _color;
-    private ThemeColor _themeColor;
+    private readonly ThemeColor _themeColor;
 
     public RelayCommand ApplyCommand { get; }
 
@@ -24,7 +25,12 @@ public class ColorPickerViewModel : ObservableObject
 
         if (themeColor.Value is string value)
         {
-            Color = TypeConverter.ConvertFromString(value) as Color?;
+            try
+            {
+                Color = TypeConverter.ConvertFromString(value) as Color?;
+            }
+            catch(FormatException)
+            { }
         }
     }
 

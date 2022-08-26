@@ -7,15 +7,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-using MaterialDesignThemes.Wpf;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using MaterialDesignThemes.Wpf;
 
 namespace ColorKraken;
 
-public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
+public class EditorViewModel : ObservableObject,
+    IRecipient<BrushUpdated>, 
+    IRecipient<ThemesUpdated>
 {
     public IMessenger Messenger { get; }
     public IThemeManager ThemeManager { get; }
@@ -58,7 +60,7 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         }
     }
 
-    public MainWindowViewModel(
+    public EditorViewModel(
         ISnackbarMessageQueue messageQueue,
         IMessenger messenger,
         IThemeManager themeManager)
@@ -67,7 +69,8 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         ThemeManager = themeManager ?? throw new ArgumentNullException(nameof(themeManager));
         //ThemeColorFactory = themeColorFactory ?? throw new ArgumentNullException(nameof(themeColorFactory));
-        Messenger.Register(this);
+        Messenger.Register<BrushUpdated>(this);
+        Messenger.Register<ThemesUpdated>(this);
 
         NewThemeCommand = new AsyncRelayCommand(NewTheme);
         OpenThemeFolderCommand = new RelayCommand(OnOpenThemeFolder);
@@ -99,8 +102,6 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
             ShowError("Error loading theme file", e.ToString());
         }
     }
-
-
 
     private async Task LoadThemeBrushes(Theme? value)
     {
@@ -228,6 +229,8 @@ public class MainWindowViewModel : ObservableObject, IRecipient<BrushUpdated>
         Themes.Clear();
         await Task.Run(LoadThemes);
     }
-}
 
-public record class ErrorDetailsViewModel(string Details) { }
+    public async void Receive(ThemesUpdated message) => await OnRefresh();
+}
+public record class ErrorDetailsViewModel(string Details);
+

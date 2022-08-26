@@ -4,12 +4,13 @@ using System.Windows.Threading;
 
 using ColorKraken.Configuration;
 
+using CommunityToolkit.Mvvm.Messaging;
+
 using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace ColorKraken;
 
@@ -24,11 +25,6 @@ public partial class App : Application
         using IHost host = CreateHostBuilder(args).Build();
         host.Start();
 
-        //Parallel.ForEach(Enumerable.Repeat(0, 100), (_) =>
-        //{
-        //    host.Services.GetRequiredService<MainWindowViewModel>();
-        //});
-
         App app = new();
         app.InitializeComponent();
         app.MainWindow = host.Services.GetRequiredService<MainWindow>();
@@ -41,15 +37,16 @@ public partial class App : Application
             .ConfigureAppConfiguration((hostBuilderContext, configurationBuilder) =>
             {
                 configurationBuilder.AddUserSecrets(typeof(App).Assembly);
-                configurationBuilder.AddAzureKeyVault("https://colorkraken.vault.azure.net/")
-                    .IgnoreExceptionFromLastSource();
             })
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddSingleton<MainWindow>();
-                services.AddSingleton<MainWindowViewModel>();
+                services.AddSingleton<EditorViewModel>();
+                services.AddSingleton<DownloadViewModel>();
                 services.AddSingleton<IProcessService, ProcessService>();
                 services.AddSingleton<IThemeManager, ThemeManager>();
+
+                services.AddHttpClient();
 
                 services.AddSingleton<WeakReferenceMessenger>();
                 services.AddSingleton<IMessenger, WeakReferenceMessenger>(provider => provider.GetRequiredService<WeakReferenceMessenger>());
@@ -71,9 +68,6 @@ public partial class App : Application
                     Dispatcher dispatcher = provider.GetRequiredService<Dispatcher>();
                     return new SnackbarMessageQueue(TimeSpan.FromSeconds(3.0), dispatcher);
                 });
-
-                //services.AddOptions<MySettings>()
-                //    .Bind(hostContext.Configuration.GetSection("Settings"));
             });
 }
 

@@ -9,11 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		Directory.Build.targets = Directory.Build.targets
 		.github\workflows\dotnet-desktop.yml = .github\workflows\dotnet-desktop.yml
 		README.md = README.md
+		Themes.json = Themes.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorKraken.Tests", "ColorKraken.Tests\ColorKraken.Tests.csproj", "{71F1A530-8B07-4ABA-ACDD-5EFFC57A9FF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorKraken.Tests", "ColorKraken.Tests\ColorKraken.Tests.csproj", "{71F1A530-8B07-4ABA-ACDD-5EFFC57A9FF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

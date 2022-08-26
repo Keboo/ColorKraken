@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ColorKraken;
 
