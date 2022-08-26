@@ -11,6 +11,12 @@
     <UserSecretsId>2cecaeda-d0ac-452e-8a56-cbd0b940688b</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <SciuridaeAppName>ColorKraken</SciuridaeAppName>
+    <RepositoryUrl>https://github.com/Keboo/ColorKraken</RepositoryUrl>
+  </PropertyGroup>
+
   <ItemGroup>
     <ApplicationDefinition Remove="App.xaml" />
     <Page Include="App.xaml" />
@@ -33,5 +39,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Sciuridae" Version="0.0.3-ci2" />
   </ItemGroup>
 </Project>
