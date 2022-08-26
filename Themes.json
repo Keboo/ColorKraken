@@ -6,5 +6,29 @@
     "author": "JonBunator",
     "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/dracula.png",
     "thumbnail-image": ""
+  },
+  {
+    "title": "Monokai",
+    "theme-file": "https://raw.githubusercontent.com/JonBunator/gitkraken-custom-themes/master/Themes/Monokai/monokai-dark.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/monokai-dark.png",
+    "thumbnail-image": ""
+  },
+  {
+    "title": "Night Owl (dark)",
+    "theme-file": "https://raw.githubusercontent.com/JonBunator/gitkraken-custom-themes/master/Themes/NightOwl/night-owl-dark.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/night-owl-dark.png",
+    "thumbnail-image": ""
+  },
+  {
+    "title": "Night Owl (light)",
+    "theme-file": "https://raw.githubusercontent.com/JonBunator/gitkraken-custom-themes/master/Themes/NightOwl/night-owl-light.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/night-owl-light.png",
+    "thumbnail-image": ""
   }
 ]
