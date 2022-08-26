@@ -12,14 +12,28 @@ namespace ColorKraken
         private EditorViewModel EditorViewModel { get; set; }
         private DownloadViewModel DownloadViewModel { get; set; }
 
-        public MainWindow(EditorViewModel editorViewModel, DownloadViewModel downloadViewModel)
+        public MainWindow(
+            MainWindowViewModel viewModel,
+            EditorViewModel editorViewModel, 
+            DownloadViewModel downloadViewModel)
         {
+            if (viewModel is null)
+            {
+                throw new ArgumentNullException(nameof(viewModel));
+            }
+
             if (editorViewModel is null)
             {
                 throw new ArgumentNullException(nameof(editorViewModel));
             }
 
+            if (downloadViewModel is null)
+            {
+                throw new ArgumentNullException(nameof(downloadViewModel));
+            }
+
             InitializeComponent();
+            DataContext = viewModel;
             EditorTab.DataContext = EditorViewModel = editorViewModel;
             DownloadTab.DataContext = DownloadViewModel = downloadViewModel;
             

@@ -22,8 +22,6 @@ public class EditorViewModel : ObservableObject,
     public IMessenger Messenger { get; }
     public IThemeManager ThemeManager { get; }
 
-    public ISnackbarMessageQueue MessageQueue { get; }
-
     public AsyncRelayCommand NewThemeCommand { get; }
     public IRelayCommand DeleteCommand { get; }
     public IRelayCommand RefreshCommand { get; }
@@ -61,14 +59,11 @@ public class EditorViewModel : ObservableObject,
     }
 
     public EditorViewModel(
-        ISnackbarMessageQueue messageQueue,
         IMessenger messenger,
         IThemeManager themeManager)
     {
-        MessageQueue = messageQueue ?? throw new ArgumentNullException(nameof(messageQueue));
         Messenger = messenger ?? throw new ArgumentNullException(nameof(messenger));
         ThemeManager = themeManager ?? throw new ArgumentNullException(nameof(themeManager));
-        //ThemeColorFactory = themeColorFactory ?? throw new ArgumentNullException(nameof(themeColorFactory));
         Messenger.Register<BrushUpdated>(this);
         Messenger.Register<ThemesUpdated>(this);
 
@@ -195,13 +190,7 @@ public class EditorViewModel : ObservableObject,
     }
 
     private void ShowError(string message, string details)
-        => MessageQueue.Enqueue(message, "Details", OnShowErrorDetails, details);
-
-    private async void OnShowErrorDetails(string? details)
-    {
-        if (string.IsNullOrEmpty(details)) return;
-        await DialogHost.Show(new ErrorDetailsViewModel(details), "Root");
-    }
+        => Messenger.Send(new ShowError(message, details));
 
     private void OnDelete()
     {
@@ -232,5 +221,3 @@ public class EditorViewModel : ObservableObject,
 
     public async void Receive(ThemesUpdated message) => await OnRefresh();
 }
-public record class ErrorDetailsViewModel(string Details);
-

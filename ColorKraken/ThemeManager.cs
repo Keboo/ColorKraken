@@ -211,8 +211,12 @@ public class ThemeManager : IThemeManager
     public async Task CreateTheme(string name, Stream themeData)
     {
         string filePath = GetThemeFilePath(name);
+        if (File.Exists(filePath))
+        {
+            throw new IOException($"A theme with the name {name} already exists");
+        }
         //TODO: Check for existing file
-        using Stream writeStream = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+        using Stream writeStream = File.Open(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
         await themeData.CopyToAsync(writeStream);
     }
 }

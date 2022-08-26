@@ -41,6 +41,7 @@ public partial class App : Application
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddSingleton<MainWindow>();
+                services.AddSingleton<MainWindowViewModel>();
                 services.AddSingleton<EditorViewModel>();
                 services.AddSingleton<DownloadViewModel>();
                 services.AddSingleton<IProcessService, ProcessService>();
