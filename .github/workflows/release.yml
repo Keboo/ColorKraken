@@ -42,5 +42,5 @@ jobs:
         generate_release_notes: true
         files: |
           ./SciuridaeReleases/RELEASES
-          ./SciuridaeReleases/SimplyBudget-${{ github.ref_name }}-full.nupkg
-          ./SciuridaeReleases/SimplyBudgetSetup.exe
+          ./SciuridaeReleases/ColorKraken-${{ github.ref_name }}-full.nupkg
+          ./SciuridaeReleases/ColorKrakenSetup.exe
