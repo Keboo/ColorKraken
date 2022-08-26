@@ -213,7 +213,8 @@
             </StackPanel>
           </TabItem.Header>
 
-          <ListBox ItemsSource="{Binding Items}" HorizontalContentAlignment="Stretch">
+          <ListBox ItemsSource="{Binding Items}" HorizontalContentAlignment="Stretch"
+                   ScrollViewer.CanContentScroll="false">
             <ListBox.ItemTemplate>
               <DataTemplate DataType="{x:Type local:ThemeItem}">
                 <Grid>
