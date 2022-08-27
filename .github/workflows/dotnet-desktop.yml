@@ -4,8 +4,8 @@ on:
   push:
     branches: [ master ]
     # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    #tags:
+      #- 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
     paths-ignore:
     - 'README.md'
   pull_request:
@@ -24,23 +24,23 @@ env:
 jobs:
   build:
     if: ${{ github.repository == 'Keboo/ColorKraken' }}
-    runs-on: windows-2022
+    runs-on: windows-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     
-    - name: Set Version
-      run: |
-        if ("${{ github.ref }}".startsWith("refs/tags/v")) {
-          $tagVersion = "${{ github.ref }}".substring(11)
-          echo "buildVersion=$tagVersion.${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          echo "nugetVersion=$tagVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          echo "preRelease=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        } else {
-          echo "buildVersion=${{ env.baseVersion }}.${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          echo "nugetVersion=${{ env.baseVersion }}-ci${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        }
+    #- name: Set Version
+    #  run: |
+    #    if ("${{ github.ref }}".startsWith("refs/tags/v")) {
+    #      $tagVersion = "${{ github.ref }}".substring(11)
+    #      echo "buildVersion=$tagVersion.${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    #      echo "nugetVersion=$tagVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    #      echo "preRelease=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    #    } else {
+    #      echo "buildVersion=${{ env.baseVersion }}.${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    #      echo "nugetVersion=${{ env.baseVersion }}-ci${{ github.run_number }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+    #    }
 
     #- name: Setup .NET 6.0
     #  uses: actions/setup-dotnet@v1
@@ -56,23 +56,23 @@ jobs:
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal --configuration ${{ env.configuration }} --logger "console" --blame-hang --blame-hang-timeout 5m
     
-    - name: Publish
-      if: ${{ github.event_name != 'pull_request' }}
-      run: dotnet publish --configuration ${{ env.configuration }} --no-build --output ${{ github.workspace }}\choco\colorkraken\tools
+    #- name: Publish
+    #  if: ${{ github.event_name != 'pull_request' }}
+    #  run: dotnet publish --configuration ${{ env.configuration }} --no-build --output ${{ github.workspace }}\choco\colorkraken\tools
 
-    - name: Choco Pack
-      if: ${{ github.event_name != 'pull_request' }}
-      run: choco pack --version ${{ env.nugetVersion }} --out ${{ github.workspace }}\choco
-      working-directory: choco\colorkraken
+    #- name: Choco Pack
+    #  if: ${{ github.event_name != 'pull_request' }}
+    #  run: choco pack --version ${{ env.nugetVersion }} --out ${{ github.workspace }}\choco
+    #  working-directory: choco\colorkraken
     
-    - name: Choco Package Upload
-      if: ${{ github.event_name != 'pull_request' }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: Chocolatey NuGet
-        path: ${{ github.workspace }}\choco\*.nupkg
+    #- name: Choco Package Upload
+    #  if: ${{ github.event_name != 'pull_request' }}
+    #  uses: actions/upload-artifact@v2
+    #  with:
+    #    name: Chocolatey NuGet
+    #    path: ${{ github.workspace }}\choco\*.nupkg
 
-    - name: Choco Package Push
-      if: ${{ env.preRelease == 'false' }}
-      run: choco push -s https://push.chocolatey.org/ --key ${{ secrets.CHOCO_API_KEY }}
-      working-directory: choco
+    #- name: Choco Package Push
+    #  if: ${{ env.preRelease == 'false' }}
+    #  run: choco push -s https://push.chocolatey.org/ --key ${{ secrets.CHOCO_API_KEY }}
+    #  working-directory: choco

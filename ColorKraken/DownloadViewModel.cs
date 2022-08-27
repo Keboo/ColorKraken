@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Policy;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -46,7 +48,7 @@ public partial class DownloadViewModel
         }
 
         Items.Clear();
-        foreach(var item in themeItems ?? Enumerable.Empty<ThemeItem>())
+        foreach(var item in (themeItems ?? Enumerable.Empty<ThemeItem>()).OrderBy(x => x.Title))
         {
             Items.Add(item);
         }
@@ -69,7 +71,19 @@ public partial class DownloadViewModel
     }
 
     private static bool CanDownload(ThemeItem themeItem)
-        => themeItem.ThemeFile is not null;
+        => themeItem.Title is not null && themeItem.ThemeFile is not null;
+
+    [RelayCommand(CanExecute = nameof(CanOpenLink))]
+    private void OpenLink(ThemeItem themeItem)
+    {
+        if (themeItem.Link is { } url)
+        {
+            Process.Start(new ProcessStartInfo(url.AbsoluteUri) { UseShellExecute = true });
+        }
+    }
+
+    private static bool CanOpenLink(ThemeItem themeItem)
+        => themeItem.Link is not null;
 
     private void ShowException(Exception e)
         => Messenger.Send(new ShowError(e.Message, e.ToString()));
@@ -86,6 +100,6 @@ public record class ThemeItem(
     string? Author,
     [property:JsonPropertyName("preview-image")]
     Uri? PreviewImage,
-    [property:JsonPropertyName("thumbnail-image")]
-    Uri ThumbnailImage);
+    [property:JsonPropertyName("link")]
+    Uri Link);
 

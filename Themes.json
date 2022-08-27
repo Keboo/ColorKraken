@@ -5,7 +5,7 @@
     "description": "",
     "author": "JonBunator",
     "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/dracula.png",
-    "thumbnail-image": ""
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
   },
   {
     "title": "Monokai",
@@ -13,7 +13,7 @@
     "description": "",
     "author": "JonBunator",
     "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/monokai-dark.png",
-    "thumbnail-image": ""
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
   },
   {
     "title": "Night Owl (dark)",
@@ -21,7 +21,7 @@
     "description": "",
     "author": "JonBunator",
     "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/night-owl-dark.png",
-    "thumbnail-image": ""
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
   },
   {
     "title": "Night Owl (light)",
@@ -29,6 +29,86 @@
     "description": "",
     "author": "JonBunator",
     "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/night-owl-light.png",
-    "thumbnail-image": ""
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
+  },
+  {
+    "title": "Nord",
+    "theme-file": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/Themes/Nord/nord-dark.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/nord-dark.png",
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
+  },
+  {
+    "title": "OneDark",
+    "theme-file": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/Themes/OneDark/one-dark.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/one-dark.png",
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
+  },
+  {
+    "title": "Solarized (dark)",
+    "theme-file": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/Themes/Solarized/solarized-dark.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/one-dark.png",
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
+  },
+  {
+    "title": "Solarized (light)",
+    "theme-file": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/Themes/Solarized/solarized-light.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/solarized-light.png",
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
+  },
+  {
+    "title": "Tokyo Night",
+    "theme-file": "https://raw.githubusercontent.com/JonBunator/gitkraken-custom-themes/master/Themes/TokyoNight/tokyo-night-dark.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/tokyo-night.png",
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
+  },
+  {
+    "title": "1984",
+    "theme-file": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/Themes/1984/1984-dark.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/1984-dark.png",
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
+  },
+  {
+    "title": "GitKraken-Dark Color Blind",
+    "theme-file": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/Themes/Default%20Themes%20Modified/dark-color-blind.jsonc",
+    "description": "",
+    "author": "JonBunator",
+    "preview-image": "https://github.com/JonBunator/gitkraken-custom-themes/raw/master/images/gitkraken-dark-color-blind.png",
+    "link": "https://github.com/JonBunator/gitkraken-custom-themes"
+  },
+  {
+    "title": "Matcha-Dark-Sea",
+    "theme-file": "https://github.com/OwainWilliams/GitKrakenThemes/raw/master/Matcha-Dark-Sea/matcha.jsonc",
+    "description": "",
+    "author": "OwainWilliams",
+    "preview-image": "https://github.com/OwainWilliams/GitKrakenThemes/raw/master/Matcha-Dark-Sea/MatchaDarkSeaScreenshot.png",
+    "link": "https://github.com/OwainWilliams/GitKrakenThemes"
+  },
+  {
+    "title": "Matrix",
+    "theme-file": "https://github.com/OwainWilliams/GitKrakenThemes/raw/master/TheMatrix/matrix.jsonc",
+    "description": "",
+    "author": "OwainWilliams",
+    "preview-image": "https://github.com/OwainWilliams/GitKrakenThemes/raw/master/TheMatrix/theMatrixScreenshot.png",
+    "link": "https://github.com/OwainWilliams/GitKrakenThemes"
+  },
+  {
+    "title": "Umbraco Dark",
+    "theme-file": "https://github.com/OwainWilliams/GitKrakenThemes/raw/master/Umbraco-Dark/umbraco-dark.jsonc",
+    "description": "",
+    "author": "OwainWilliams",
+    "preview-image": "https://github.com/OwainWilliams/GitKrakenThemes/raw/master/Umbraco-Dark/umbraco-dark-screenshot.jpg",
+    "link": "https://github.com/OwainWilliams/GitKrakenThemes"
   }
 ]

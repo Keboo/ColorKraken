@@ -227,18 +227,25 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
+                    <RowDefinition Height="Auto" />
                   </Grid.RowDefinitions>
                   <Image Source="{Binding PreviewImage}" 
-                       Grid.RowSpan="3" Margin="0,0,20,0" />
+                       Grid.RowSpan="4" Margin="0,0,20,0" />
+                  
                   <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="DemiBold" 
                            Grid.Column="1" Grid.Row="0" />
                   <TextBlock Text="{Binding Author, StringFormat='by {0}'}" 
                            Grid.Column="1" Grid.Row="1" />
                   <TextBlock Text="{Binding Description}"
                            Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="1" Grid.Row="2" TextWrapping="Wrap">
+                    <Hyperlink Command="{Binding DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding Path=.}">
+                      <Run Text="{Binding Link}" />
+                    </Hyperlink>
+                  </TextBlock>
 
                   <Button Style="{StaticResource MaterialDesignOutlinedSecondaryLightButton}" 
-                        Grid.Column="2" Grid.RowSpan="3" VerticalAlignment="Center" 
+                        Grid.Column="2" Grid.RowSpan="4" VerticalAlignment="Center" 
                         Height="NaN" ToolTip="Download theme"
                         Command="{Binding DataContext.DownloadCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding Path=.}">
                     <materialDesign:PackIcon Kind="Download" Height="40" Width="40" />
