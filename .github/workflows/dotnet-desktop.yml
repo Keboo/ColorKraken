@@ -52,10 +52,10 @@ jobs:
     
     - name: Build
       run: dotnet build -p:ContinuousIntegrationBuild=True --configuration ${{ env.configuration }} --no-restore
-    
--   - name: dotnet publish
+
+    - name: Publish
       run: dotnet publish --no-build --configuration ${{ env.configuration }}
-      
+
     - name: VirusTotal Scan
       uses: crazy-max/ghaction-virustotal@v3
       with:
