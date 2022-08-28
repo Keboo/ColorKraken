@@ -75,6 +75,15 @@ jobs:
         name: Installer
         path: ./SciuridaeReleases
 
+    - name: Upload to blob
+      uses: bacongobbler/azure-blob-storage-upload@main
+      with:
+        source_dir: SciuridaeReleases
+        container_name: test
+        connection_string: ${{ secrets.BLOB_CONNECTION_STRING }}
+        extra_args: '--pattern ColorKraken*'
+        overwrite: 'true'
+
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal --configuration ${{ env.configuration }} --logger "console" --blame-hang --blame-hang-timeout 5m
     
