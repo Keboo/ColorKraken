@@ -67,7 +67,11 @@ jobs:
       run: Get-Command -Module Defender
     
     - name: Run Scan
-      run: Start-MpScan -ScanType QuickScan -ScanPath ./SciuridaeReleases
+      run: |
+        Start-MpScan -ScanType QuickScan -ScanPath ./SciuridaeReleases
+        Get-MpThreatDetection
+
+    
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
