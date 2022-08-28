@@ -148,7 +148,8 @@ public class EditorViewModel : ObservableObject,
     {
         var content = new NewThemeViewModel(Themes);
         if (await DialogHost.Show(content, "Root") as bool? == true &&
-            content.SelectedTheme is { } baseTheme)
+            content.SelectedTheme is { } baseTheme &&
+            !string.IsNullOrWhiteSpace(content.Name))
         {
             Theme theme;
             try

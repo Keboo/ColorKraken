@@ -43,4 +43,5 @@ jobs:
         files: |
           ./SciuridaeReleases/RELEASES
           ./SciuridaeReleases/ColorKraken-${{ github.ref_name }}-full.nupkg
+          ./SciuridaeReleases/ColorKraken-${{ github.ref_name }}-delta.nupkg
           ./SciuridaeReleases/ColorKrakenSetup.exe

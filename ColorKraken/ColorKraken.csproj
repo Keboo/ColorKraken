@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>1.0.0</Version>
+    <Version>1.2.3</Version>
     <SciuridaeAppName>ColorKraken</SciuridaeAppName>
     <RepositoryUrl>https://github.com/Keboo/ColorKraken</RepositoryUrl>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -40,6 +40,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="Sciuridae" Version="0.0.3-ci3" />
+    <PackageReference Include="Sciuridae" Version="0.0.3-ci5" />
   </ItemGroup>
 </Project>
