@@ -62,17 +62,13 @@ jobs:
         vt_api_key: ${{ secrets.VT_API_KEY }}
         files: |
           ./SciuridaeReleases/ColorKrakenSetup.exe
-          
-    - name: Get Commands
-      run: Get-Command -Module Defender
     
     - name: Run Scan
-      run: |
-        Start-MpScan -ScanType QuickScan -ScanPath ./SciuridaeReleases
-        Get-MpThreatDetection
+      run: Start-MpScan -ScanType QuickScan -ScanPath ./SciuridaeReleases
 
-    
-
+    - name: Show Scan Results
+      run: Get-MpThreatDetection
+      
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
