@@ -49,12 +49,15 @@ jobs:
     
     - name: Install dependencies 
       run: dotnet restore
-    
+
     - name: Build
       run: dotnet build -p:ContinuousIntegrationBuild=True --configuration ${{ env.configuration }} --no-restore
 
     - name: Publish
       run: dotnet publish --no-build --configuration ${{ env.configuration }}
+
+    - name: File hashes
+      run: Get-ChildItem "~/.nuget/packages/clowd.squirrel/2.9.42/tools" | %{ $_.Name, (Get-FileHash -Algorithm MD5 -Path $_).Hash}
 
     - name: VirusTotal Scan
       uses: crazy-max/ghaction-virustotal@v3
