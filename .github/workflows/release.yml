@@ -53,13 +53,14 @@ jobs:
           ./SciuridaeReleases/ColorKrakenSetup.exe
 
     - name: Upload to blob
-      uses: bacongobbler/azure-blob-storage-upload@main
-      with:
-        source_dir: SciuridaeReleases
-        container_name: test
-        connection_string: ${{ secrets.BLOB_CONNECTION_STRING }}
-        extra_args: '--pattern ColorKraken*'
-        overwrite: 'true'
+      run: azcopy cp "./SciuridaeReleases/ColorKrakenSetup.exe" "https://sciuridae.blob.core.windows.net/test/ColorKrakenSetup.exe?${{ secrets.ACCESS_KEY }}"
+      #uses: bacongobbler/azure-blob-storage-upload@main
+      #with:
+      #  source_dir: SciuridaeReleases
+      #  container_name: test
+      #  connection_string: ${{ secrets.BLOB_CONNECTION_STRING }}
+      #  extra_args: '--pattern ColorKraken*'
+      #  overwrite: 'true'
           
     - name: VirusTotal Scan
       uses: crazy-max/ghaction-virustotal@v3
