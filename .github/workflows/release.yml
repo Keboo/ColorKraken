@@ -53,7 +53,7 @@ jobs:
           ./SciuridaeReleases/ColorKrakenSetup.exe
 
     - name: Upload to blob
-      run: azcopy cp "./SciuridaeReleases/ColorKrakenSetup.exe" "https://sciuridae.blob.core.windows.net/test/ColorKrakenSetup.exe?${{ secrets.ACCESS_KEY }}"
+      run: az storage copy -s "./SciuridaeReleases/ColorKrakenSetup.exe" -d "https://sciuridae.blob.core.windows.net/test/ColorKrakenSetup.exe" --connection-string "${{ secrets.BLOB_CONNECTION_STRING }}"
       #uses: bacongobbler/azure-blob-storage-upload@main
       #with:
       #  source_dir: SciuridaeReleases
