@@ -44,7 +44,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        fail_on_unmatched_files: true
+        fail_on_unmatched_files: false
         generate_release_notes: true
         files: |
           ./SciuridaeReleases/RELEASES
