@@ -49,3 +49,30 @@ jobs:
     #- name: Upload to blob
     #  run: az storage copy -s "./SciuridaeReleases/ColorKrakenSetup.exe" -d "https://sciuridae.blob.core.windows.net/test/ColorKrakenSetup.exe" --connection-string "${{ secrets.BLOB_CONNECTION_STRING }}"
     
+  build-mac:
+    needs: build
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Mac App
+      run: xcodebuild -project "ColorKraken for Mac/ColorKraken/ColorKraken.xcodeproj" -scheme ColorKraken -derivedDataPath ./build
+
+    - name: Archive Mac App
+      run: |
+        cd ./build/Build/Products/Release
+        zip -r ColorKraken-Mac.zip ColorKraken.app
+
+    - name: Upload Mac App artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MacApp
+        path: ./build/Build/Products/Release/ColorKraken-Mac.zip
+
+    - name: Release Mac App
+      uses: softprops/action-gh-release@v1
+      with:
+        fail_on_unmatched_files: false
+        generate_release_notes: true
+        files: ./build/Build/Products/Release/ColorKraken-Mac.zip
