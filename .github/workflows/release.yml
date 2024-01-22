@@ -57,7 +57,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Build Mac App
-      run: xcodebuild -project "ColorKraken for Mac/ColorKraken/ColorKraken.xcodeproj" -scheme ColorKraken -derivedDataPath ./build
+      run: xcodebuild -project "ColorKraken for Mac/ColorKraken.xcodeproj" -scheme ColorKraken -derivedDataPath ./build
 
     - name: Archive Mac App
       run: |
