@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Security.Policy;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -16,10 +15,9 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace ColorKraken;
 
-[ObservableObject]
-public partial class DownloadViewModel
+public partial class DownloadViewModel : ObservableObject
 {
-    public ObservableCollection<ThemeItem> Items { get; } = new();
+    public ObservableCollection<ThemeItem> Items { get; } = [];
 
     private HttpClient HttpClient { get; }
     private IThemeManager ThemeManager { get; }
