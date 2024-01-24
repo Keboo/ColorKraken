@@ -41,7 +41,7 @@ public class TolerantSource : IConfigurationSource
             }
         }
 
-        public void Set(string key, string value)
+        public void Set(string key, string? value)
         {
             try
             {
@@ -73,7 +73,7 @@ public class TolerantSource : IConfigurationSource
             { }
         }
 
-        public IEnumerable<string> GetChildKeys(IEnumerable<string> earlierKeys, string parentPath)
+        public IEnumerable<string> GetChildKeys(IEnumerable<string> earlierKeys, string? parentPath)
         {
             try
             {
@@ -82,7 +82,7 @@ public class TolerantSource : IConfigurationSource
             }
             catch (Exception)
             {
-                return Array.Empty<string>();
+                return [];
             }
         }
     }
@@ -95,9 +95,14 @@ public class TolerantSource : IConfigurationSource
 
         public bool ActiveChangeCallbacks => false;
 
-        public IDisposable? RegisterChangeCallback(Action<object> callback, object state)
+        public IDisposable RegisterChangeCallback(Action<object?> callback, object? state)
         {
-            return null;
+            return new EmptyDisposable();
         }
+    }
+
+    private sealed class EmptyDisposable : IDisposable
+    {
+        public void Dispose() { }
     }
 }
