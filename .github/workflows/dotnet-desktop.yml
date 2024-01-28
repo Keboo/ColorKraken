@@ -53,6 +53,9 @@ jobs:
     - name: Build
       run: dotnet build -p:ContinuousIntegrationBuild=True --configuration ${{ env.configuration }} --no-restore
 
+    - name: Test
+      run: dotnet test --no-build --configuration Release --verbosity normal
+
     - name: Publish
       run: dotnet publish --no-build --configuration ${{ env.configuration }}
 

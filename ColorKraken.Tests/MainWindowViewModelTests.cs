@@ -100,7 +100,7 @@ public class MainWindowViewModelTests
     }
 
     [Fact]
-    public void OnReceive_BrushUpdatedMessage_UpdatesTheme()
+    public async void OnReceive_BrushUpdatedMessage_UpdatesTheme()
     {
         //Arrange
         AutoMocker mocker = new();
@@ -112,11 +112,16 @@ public class MainWindowViewModelTests
 
         Mock<IThemeManager> themeManager = mocker.GetMock<IThemeManager>();
         themeManager.Setup(x => x.SaveTheme(selectedTheme, It.IsAny<IEnumerable<ThemeCategory>>()));
+        themeManager.Setup(x => x.GetCategories(It.IsAny<Theme>())).ReturnsAsyncEnumerable();
         EditorViewModel vm = mocker.CreateInstance<EditorViewModel>();
 
+        var categoriesSet = vm.WatchPropertyChanges<List<ThemeCategory>?>(nameof(EditorViewModel.ThemeCategories));
         vm.SelectedTheme = selectedTheme;
-        var color = new ThemeColor("Testcolor", messenger) { Value = "new" };
-        var message = new BrushUpdated(color, "old" );
+
+        await categoriesSet.WaitForChange();
+
+        var color = new ThemeColor("TestColor", messenger) { Value = "new" };
+        var message = new BrushUpdated(color, "old");
 
         //Act
         messenger.Send(message);

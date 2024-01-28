@@ -7,8 +7,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace ColorKraken;
 
-[ObservableObject]
-public partial class MainWindowViewModel : IRecipient<ShowError>
+public partial class MainWindowViewModel : ObservableObject, IRecipient<ShowError>
 {
     public ISnackbarMessageQueue MessageQueue { get; }
 
