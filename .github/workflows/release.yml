@@ -61,6 +61,9 @@ jobs:
     - name: Build Mac App
       run: xcodebuild -project "ColorKraken for Mac/ColorKraken/ColorKraken.xcodeproj" -scheme ColorKraken -derivedDataPath ./build
 
+    - name: Print build directory structure
+      run: ls -R ./build
+
     - name: Archive Mac App
       run: |
         cd ./build/Build/Products/Release
