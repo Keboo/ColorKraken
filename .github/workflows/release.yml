@@ -55,14 +55,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: List contents of cur directory
-      run: ls -la "./"
-
-    - name: List contents of the Mac directory
-      run: ls -la "ColorKraken for Mac/"
+    - name: List contents of the colorkraken directory
+      run: ls -la "ColorKraken for Mac/ColorKraken/"
 
     - name: Build Mac App
-      run: xcodebuild -project "ColorKraken for Mac/ColorKraken.xcodeproj" -scheme ColorKraken -derivedDataPath ./build
+      run: xcodebuild -project "ColorKraken for Mac/ColorKraken/ColorKraken.xcodeproj" -scheme ColorKraken -derivedDataPath ./build
 
     - name: Archive Mac App
       run: |
