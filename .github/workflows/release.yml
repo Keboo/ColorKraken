@@ -55,14 +55,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: List contents of the colorkraken directory
-      run: ls -la "ColorKraken for Mac/ColorKraken/"
-
     - name: Build Mac App
       run: xcodebuild -project "ColorKraken for Mac/ColorKraken/ColorKraken.xcodeproj" -scheme ColorKraken -derivedDataPath ./build
-
-    - name: Print build directory structure
-      run: ls -R ./build
 
     - name: Archive Mac App
       run: |
