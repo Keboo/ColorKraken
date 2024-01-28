@@ -49,8 +49,7 @@ jobs:
     #- name: Upload to blob
     #  run: az storage copy -s "./SciuridaeReleases/ColorKrakenSetup.exe" -d "https://sciuridae.blob.core.windows.net/test/ColorKrakenSetup.exe" --connection-string "${{ secrets.BLOB_CONNECTION_STRING }}"
     
-  build-mac:
-    needs: build
+  build-mac:    
     runs-on: macos-latest
 
     steps:
