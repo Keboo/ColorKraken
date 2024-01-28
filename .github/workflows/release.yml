@@ -66,18 +66,18 @@ jobs:
 
     - name: Archive Mac App
       run: |
-        cd ./build/Build/Products/Release
+        cd ./build/Build/Products/Debug
         zip -r ColorKraken-Mac.zip ColorKraken.app
-
+    
     - name: Upload Mac App artifact
       uses: actions/upload-artifact@v4
       with:
         name: MacApp
-        path: ./build/Build/Products/Release/ColorKraken-Mac.zip
+        path: ./build/Build/Products/Debug/ColorKraken-Mac.zip   
 
     - name: Release Mac App
       uses: softprops/action-gh-release@v1
       with:
         fail_on_unmatched_files: false
         generate_release_notes: true
-        files: ./build/Build/Products/Release/ColorKraken-Mac.zip
+        files: ./build/Build/Products/Debug/ColorKraken-Mac.zip
