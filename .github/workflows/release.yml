@@ -36,7 +36,7 @@ jobs:
         path: ./SciuridaeReleases
     
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         fail_on_unmatched_files: false
         generate_release_notes: true
@@ -70,7 +70,7 @@ jobs:
         path: ./build/Build/Products/Debug/ColorKraken-Mac.zip   
 
     - name: Release Mac App
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         fail_on_unmatched_files: false
         generate_release_notes: true
