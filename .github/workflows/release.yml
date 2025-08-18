@@ -13,7 +13,7 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -53,7 +53,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Build Mac App
       run: xcodebuild -project "ColorKraken for Mac/ColorKraken/ColorKraken.xcodeproj" -scheme ColorKraken -derivedDataPath ./build
