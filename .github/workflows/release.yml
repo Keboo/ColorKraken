@@ -30,7 +30,7 @@ jobs:
       run: dotnet publish --no-build --configuration Release -p:Version=${{ github.ref_name }} -p:SciuridaeApiKey=${{ secrets.SCIURIDAEAPIKEY }}
     
     - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: Installer
         path: ./SciuridaeReleases
@@ -64,7 +64,7 @@ jobs:
         zip -r ColorKraken-Mac.zip ColorKraken.app
     
     - name: Upload Mac App artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: MacApp
         path: ./build/Build/Products/Debug/ColorKraken-Mac.zip   
